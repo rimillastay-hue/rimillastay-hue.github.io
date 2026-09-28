@@ -1,184 +1,64 @@
 <!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Kasir Konter BRILink</title>
-    <style>
-        :root {
-            --bri-blue: #00529C;
-            --bri-orange: #F15A24;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f6f9;
-        }
-        .container {
-            max-width: 600px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        h2 {
-            text-align: center;
-            color: var(--bri-blue);
-            margin-bottom: 20px;
-            border-bottom: 3px solid var(--bri-orange);
-            padding-bottom: 10px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #333;
-        }
-        input, select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--bri-blue);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        button:hover {
-            background-color: #003f78;
-        }
-        
-        /* Struk Area (Sembunyi di layar, muncul saat cetak) */
-        #struk-area {
-            display: none;
-            font-family: 'Courier New', Courier, monospace;
-            width: 300px;
-            margin: auto;
-            padding: 10px;
-            border: 1px dashed #000;
-        }
-        .text-center { text-align: center; }
-        .line { border-top: 1px dashed #000; margin: 10px 0; }
-        .flex { display: flex; justify-content: space-between; }
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RRQ CELLULAR</title><script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+</head><body class="bg-[#f2f2f2] p-3 max-w-md mx-auto font-sans pb-20">
 
-        @media print {
-            body * { visibility: hidden; }
-            #struk-area, #struk-area * { visibility: visible; }
-            #struk-area { display: block; position: absolute; left: 0; top: 0; width: 100%; }
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <h2>AGEN BRILink KASIR</h2>
-    
-    <div class="form-group">
-        <label for="jenis">Jenis Transaksi</label>
-        <select id="jenis">
-            <option value="Transfer BRI">Transfer BRI</option>
-            <option value="Transfer Bank Lain">Transfer Bank Lain</option>
-            <option value="Tarik Tunai">Tarik Tunai</option>
-            <option value="Setor Tunai">Setor Tunai</option>
-            <option value="Bayar Listrik/PLN">Bayar Listrik/PLN</option>
-            <option value="Pulsa / Kuota">Pulsa / Kuota</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="tujuan">Nomor Rekening / Target</label>
-        <input type="text" id="tujuan" placeholder="Masukkan nomor rekening/HP">
-    </div>
-
-    <div class="form-group">
-        <label for="nominal">Nominal Transaksi (Rp)</label>
-        <input type="number" id="nominal" placeholder="Contoh: 500000" oninput="hitungTotal()">
-    </div>
-
-    <div class="form-group">
-        <label for="admin">Biaya Admin Agen (Rp)</label>
-        <input type="number" id="admin" placeholder="Contoh: 5000" value="5000" oninput="hitungTotal()">
-    </div>
-
-    <div class="form-group">
-        <label>Total yang Harus Dibayar</label>
-        <input type="text" id="total" readonly style="background-color: #e9ecef; font-weight: bold; color: var(--bri-orange);">
-    </div>
-
-    <button onclick="cetakStruk()">CETAK STRUK KASIR</button>
+<!-- HEADER RRQ - MERAH HITAM PUNYA KAU -->
+<div class="bg-white p-4 rounded-[20px] border mb-3 flex justify-between items-center">
+<div class="flex gap-3 items-center"><div class="bg-red-600 w-12 h-12 rounded-2xl flex items-center justify-center text-white font-black text-xl">R</div><div><b class="text-[14px]">RRQ CELLULAR</b><div class="text-[11px] text-gray-400">Kuantan 3 • Jl.sma</div></div></div>
+<div class="text-right"><div class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-[10px] font-bold">ONLINE - Zulbakri</div><div class="text-[10px] text-gray-400 mt-1" id="tgl"></div></div>
 </div>
 
-<!-- Template Struk Digital -->
-<div id="struk-area">
-    <div class="text-center">
-        <h3>STRUK TRANSAKSI BRILink</h3>
-        <p>Nama Agen: Agen BRILink Sukses</p>
-        <p id="p-waktu"></p>
-    </div>
-    <div class="line"></div>
-    <div class="flex"><p>Jenis:</p><p id="s-jenis"></p></div>
-    <div class="flex"><p>Tujuan/Rek:</p><p id="s-tujuan"></p></div>
-    <div class="line"></div>
-    <div class="flex"><p>Nominal:</p><p id="s-nominal"></p></div>
-    <div class="flex"><p>Admin Agen:</p><p id="s-admin"></p></div>
-    <div class="line"></div>
-    <div class="flex" style="font-weight: bold;"><p>TOTAL:</p><p id="s-total"></p></div>
-    <div class="line"></div>
-    <div class="text-center">
-        <p>TERIMA KASIH</p>
-        <p>Simpan struk ini sebagai bukti sah</p>
-    </div>
+<!-- SALDO AWAL DETAIL BISA BANYAK BANK & EWALLET -->
+<div class="bg-white p-4 rounded-[20px] border mb-3">
+<div class="flex justify-between items-center mb-2"><b class="text-[11px]">💰 UANG STANBY (SALDO AWAL)</b><button onclick="editKas()" class="text-[10px] bg-black text-white px-3 py-1 rounded-full font-bold">EDIT KAS</button></div>
+<div id="kasList" class="grid grid-cols-2 gap-2 text-[10px]"></div>
 </div>
 
-<script>
-    function hitungTotal() {
-        const nominal = parseFloat(document.getElementById('nominal').value) || 0;
-        const admin = parseFloat(document.getElementById('admin').value) || 0;
-        const total = nominal + admin;
-        
-        document.getElementById('total').value = "Rp " + total.toLocaleString('id-ID');
-    }
+<!-- INPUT -->
+<div class="bg-white p-4 rounded-[20px] border mb-3">
+<div class="flex gap-2 mb-3 overflow-x-auto">
+<button onclick="setJenis('penjualan')" id="bt-penjualan" class="bg-black text-white px-4 py-2 rounded-full font-bold text-[11px] whitespace-nowrap">PENJUALAN</button>
+<button onclick="setJenis('nonbarang')" id="bt-nonbarang" class="bg-gray-100 px-4 py-2 rounded-full font-bold text-[11px] whitespace-nowrap">NON BARANG</button>
+<button onclick="setJenis('tarik')" id="bt-tarik" class="bg-gray-100 px-4 py-2 rounded-full font-bold text-[11px] whitespace-nowrap">TARIK TUNAI</button>
+<button onclick="setJenis('setoran')" id="bt-setoran" class="bg-orange-100 px-4 py-2 rounded-full font-bold text-[11px] whitespace-nowrap">SETORAN</button>
+</div>
 
-    function cetakStruk() {
-        // Ambil data input
-        const jenis = document.getElementById('jenis').value;
-        const tujuan = document.getElementById('tujuan').value || '-';
-        const nominal = parseFloat(document.getElementById('nominal').value) || 0;
-        const admin = parseFloat(document.getElementById('admin').value) || 0;
-        const total = nominal + admin;
-        const waktu = new Date().toLocaleString('id-ID');
+<div id="brandBox" class="mb-3">
+<div class="text-[10px] font-bold text-gray-400 mb-2">PILIH BRAND / BANK / EWALLET</div>
+<div class="grid grid-cols-4 gap-2" id="brandGrid"></div>
+<div class="mt-2 text-[11px]">Pilih: <b id="brandTerpilih" class="text-red-600">AXIS</b> | <select id="paket" class="bg-gray-100 rounded-full px-2 py-1 text-[10px]"><option>1GB</option><option>2GB</option><option>3GB</option><option>5GB</option><option>10GB</option><option>20GB</option><option>Unlimited</option></select></div>
+</div>
 
-        // Validasi input minimal
-        if(nominal <= 0) {
-            alert("Harap isi nominal transaksi terlebih dahulu!");
-            return;
-        }
+<input id="nomor" placeholder="Keterangan / No HP / No Rek" class="w-full bg-gray-100 p-4 rounded-2xl mb-2 text-[12px] outline-none">
+<div class="grid grid-cols-2 gap-2 mb-2"><input id="nominal" type="number" placeholder="Modal" class="bg-gray-100 p-3 rounded-2xl text-[12px]"><input id="untung" type="number" placeholder="Untung/Admin" class="bg-green-50 border border-green-200 p-3 rounded-2xl text-[12px] font-bold"></div>
+<button onclick="simpan()" class="w-full bg-red-600 text-white p-4 rounded-2xl font-black text-[12px]">SIMPAN TRANSAKSI</button>
+</div>
 
-        // Masukkan data ke struk
-        document.getElementById('p-waktu').innerText = waktu;
-        document.getElementById('s-jenis').innerText = jenis;
-        document.getElementById('s-tujuan').innerText = tujuan;
-        document.getElementById('s-nominal').innerText = "Rp " + nominal.toLocaleString('id-ID');
-        document.getElementById('s-admin').innerText = "Rp " + admin.toLocaleString('id-ID');
-        document.getElementById('s-total').innerText = "Rp " + total.toLocaleString('id-ID');
+<!-- LAPORAN KAYAK BANGCELL TAPI HEADER RRQ -->
+<div class="bg-white p-4 rounded-[20px] border">
+<div class="flex justify-between items-center mb-3"><b class="text-[12px]">TRANSAKSI TGL <span id="tgl2"></span></b><button onclick="load()" class="bg-green-600 text-white px-4 py-1 rounded-full text-[11px] font-bold">CARI</button></div>
 
-        // Panggil fungsi cetak browser (bisa dihubungkan ke printer thermal)
-        window.print();
-    }
-</script>
+<div class="border rounded-xl overflow-hidden">
+<button onclick="tog('penjualan')" class="w-full flex justify-between p-3 border-b text-left bg-white"><span class="text-[13px] font-bold">+ TR PENJUALAN (Rp. <span id="vPenj">0</span>)</span><span>⌄</span></button><div id="c-penjualan" class="hidden p-3 bg-gray-50 text-[11px]"></div>
+<button onclick="tog('non')" class="w-full flex justify-between p-3 border-b text-left bg-white"><span class="text-[13px] font-bold">+ TR NON BARANG (Rp. <span id="vNon">0</span>)</span><span>⌄</span></button><div id="c-non" class="hidden p-3 bg-gray-50 text-[11px]"></div>
+<button onclick="tog('tarik')" class="w-full flex justify-between p-3 border-b text-left bg-white"><span class="text-[13px] font-bold">TR TARIK TUNAI (- Rp. <span id="vTarikM">0</span>), (+ Rp. <span id="vTarikP">0</span>)</span><span>⌄</span></button><div id="c-tarik" class="hidden p-3 bg-gray-50 text-[11px]"></div>
+<button onclick="tog('stanby')" class="w-full flex justify-between p-3 border-b text-left bg-white"><span class="text-[13px] font-bold">+ UANG STANBY (Rp. <span id="vStanby">0</span>)</span><span>⌄</span></button><div id="c-stanby" class="hidden p-3 bg-gray-50 text-[11px]"></div>
+<button onclick="tog('setor')" class="w-full flex justify-between p-3 text-left bg-white"><span class="text-[13px] font-bold">- UANG SETORAN (Rp. <span id="vSetor">0</span>)</span><span>⌄</span></button><div id="c-setor" class="hidden p-3 bg-gray-50 text-[11px]"></div>
+</div>
 
-</body>
-</html>
+<div class="text-center mt-6"><div class="text-[13px]">TOTAL TR : <span id="totalTr">0</span></div><div class="text-[13px]">TOTAL UANG</div><b class="text-[28px]" id="totalUang">Rp. 0</b></div>
+</div>
+
+<!-- MODAL KAS -->
+<div id="modalKas" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50" style="display:none"><div class="bg-white p-5 rounded-[20px] w-full max-w-sm">
+<b class="text-[13px]">Edit Uang Stanby - Saldo Awal Bisa Banyak Bank & E-Wallet</b>
+<div class="grid grid-cols-2 gap-2 mt-3">
+<input id="kKes" type="number" placeholder="KES LACI" class="bg-gray-100 p-2 rounded-xl text-[11px]">
+<input id="kBCA" type="number" placeholder="BCA" class="bg-blue-50 p-2 rounded-xl text-[11px]">
+<input id="kBRI" type="number" placeholder="BRI" class="bg-blue-50 p-2 rounded-xl text-[11px]">
+<input id="kMandiri" type="number" placeholder="MANDIRI" class="bg-blue-50 p-2 rounded-xl text-[11px]">
+<input id="kBNI" type="number" placeholder="BNI" class="bg-blue-50 p-2 rounded-xl text-[11px]">
+<input id="kBSI" type="number" placeholder="BSI" class="bg-blue-50 p-2 rounded-xl text-[11px]">
+<input id="kDANA" type="number" placeholder="DANA" class="bg-purple-50 p-2 rounded-xl text-
