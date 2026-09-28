@@ -4,33 +4,21 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
 </head><body class="bg-[#f2f2f2] p-3 max-w-md mx-auto font-sans pb-20">
 
-<!-- HEADER -->
 <div class="bg-white p-4 rounded-[20px] border mb-3">
-<div class="flex justify-between items-center">
-<div class="flex gap-3 items-center"><div class="bg-red-600 w-12 h-12 rounded-2xl flex items-center justify-center text-white font-black text-xl">R</div><div><b class="text-[14px]">RRQ CELLULAR</b><div class="text-[11px] text-gray-400">Tarik • Token • Aksesoris</div></div></div>
-<div class="bg-green-100 text-green-700 px-4 py-1 rounded-full text-[11px] font-bold">ONLINE</div>
-</div>
+<div class="flex justify-between items-center"><div class="flex gap-3 items-center"><div class="bg-red-600 w-12 h-12 rounded-2xl flex items-center justify-center text-white font-black text-xl">R</div><div><b>RRQ CELLULAR</b><div class="text-[11px] text-gray-400">Tarik • Token • Aksesoris</div></div></div><div class="bg-green-100 text-green-700 px-4 py-1 rounded-full text-[11px] font-bold">ONLINE</div></div>
 
-<!-- 4 SALDO AWAL - INI YANG KAU MAU -->
 <div class="mt-4">
-<div class="flex justify-between items-center mb-2"><b class="text-[11px]">💰 SALDO AWAL</b><div onclick="editSaldo()" class="text-[10px] text-red-600 font-bold underline cursor-pointer">EDIT SALDO AWAL</div></div>
-<div class="grid grid-cols-2 gap-2">
-<div class="bg-gray-100 p-3 rounded-2xl"><div class="text-[8px] text-gray-500 font-bold">KES AWAL (LACI)</div><b id="sKesA" class="text-[11px]">Rp 0</b><div class="text-[8px] text-green-600">Akhir: <span id="sKesAk">Rp 0</span></div></div>
-<div class="bg-blue-50 p-3 rounded-2xl"><div class="text-[8px] text-blue-600 font-bold">BANK AWAL</div><b id="sBankA" class="text-[11px]">Rp 0</b><div class="text-[8px] text-green-600">Akhir: <span id="sBankAk">Rp 0</span></div></div>
-<div class="bg-purple-50 p-3 rounded-2xl"><div class="text-[8px] text-purple-600 font-bold">E-WALLET AWAL</div><b id="sEwalA" class="text-[11px]">Rp 0</b><div class="text-[8px] text-green-600">Akhir: <span id="sEwalAk">Rp 0</span></div></div>
-<div class="bg-orange-50 p-3 rounded-2xl"><div class="text-[8px] text-orange-600 font-bold">APLIKASI AWAL</div><b id="sAppA" class="text-[11px]">Rp 0</b><div class="text-[8px] text-green-600">Akhir: <span id="sAppAk">Rp 0</span></div></div>
-</div>
-<div class="bg-black text-white p-3 rounded-2xl mt-2 flex justify-between"><div><div class="text-[8px] text-zinc-400">TOTAL SALDO AKHIR</div><b id="sTotalAk" class="text-[13px]">Rp 0</b></div><div class="text-right"><div class="text-[8px] text-zinc-400">MUTASI HARI INI</div><b id="mutasi" class="text-[11px] text-yellow-400">Rp 0</b><div class="text-[8px]"><span id="jmlTrx">0</span> trx • Untung <span id="totalUnt" class="text-green-400">Rp 0</span></div></div></div>
+<div class="flex justify-between items-center mb-2"><b class="text-[11px]">💰 SALDO AWAL DETAIL</b><div onclick="editSaldo()" class="text-[10px] bg-red-600 text-white px-3 py-1 rounded-full font-bold cursor-pointer">+ EDIT / TAMBAH</div></div>
+<div id="saldoDetailList" class="grid gap-2"></div>
+<div class="bg-black text-white p-3 rounded-2xl mt-3 flex justify-between"><div><div class="text-[8px] text-zinc-400">TOTAL SALDO AKHIR SEMUA</div><b id="sTotalAk" class="text-[13px]">Rp 0</b></div><div class="text-right"><div class="text-[8px] text-zinc-400">MUTASI HARI INI</div><b id="mutasi" class="text-[11px] text-yellow-400">Rp 0</b><div class="text-[8px]"><span id="jmlTrx">0</span> trx • Untung <span id="totalUnt" class="text-green-400">Rp 0</span></div></div></div>
 </div>
 </div>
 
-<!-- TAB -->
 <div class="bg-white p-1.5 rounded-[20px] flex gap-2 border mb-3">
 <button id="tab-layanan" onclick="setTab('layanan')" class="flex-1 bg-red-600 text-white p-3 rounded-full font-bold text-[12px]">LAYANAN</button>
-<button id="tab-aksesoris" onclick="setTab('aksesoris')" class="flex-1 bg-gray-100 p-3 rounded-full font-bold text-[12px]">AKSESORIS & VOUCHER</button>
+<button id="tab-aksesoris" onclick="setTab('aksesoris')" class="flex-1 bg-gray-100 p-3 rounded-full font-bold text-[12px]">AKSESORIS</button>
 </div>
 
-<!-- LAYANAN -->
 <div id="box-layanan">
 <div class="grid grid-cols-3 gap-2 mb-3">
 <button onclick="setJenis('tarik')" id="bt-tarik" class="bg-white border p-3 rounded-2xl font-bold text-[11px]">💸 TARIK</button>
@@ -43,9 +31,9 @@
 <div class="bg-white p-4 rounded-[20px] border">
 <div class="font-bold text-[14px] mb-3" id="judulForm">📶 Voucher / Perdana - V.Tembak</div>
 <div id="brandBox" class="mb-3">
-<div class="text-[10px] font-bold text-gray-400 mb-2">PILIH BRAND (VOUCHER TEMBAK - ALL BRAND)</div>
+<div class="text-[10px] font-bold text-gray-400 mb-2">PILIH BRAND (ALL BRAND)</div>
 <div class="grid grid-cols-4 gap-2">
-<button onclick="pilihBrand('AXIS')" id="br-AXIS" class="brand-btn bg-black text-white p-2 rounded-xl text-[10px] font-bold border">AXIS</button>
+<button onclick="pilihBrand('AXIS')" id="br-AXIS" class="brand-btn bg-black text-white p-2 rounded-xl text-[10px] font-bold">AXIS</button>
 <button onclick="pilihBrand('XL')" id="br-XL" class="brand-btn bg-white border p-2 rounded-xl text-[10px] font-bold">XL</button>
 <button onclick="pilihBrand('TELKOMSEL')" id="br-TELKOMSEL" class="brand-btn bg-white border p-2 rounded-xl text-[10px] font-bold">TSEL</button>
 <button onclick="pilihBrand('INDOSAT')" id="br-INDOSAT" class="brand-btn bg-white border p-2 rounded-xl text-[10px] font-bold">ISAT</button>
@@ -54,48 +42,7 @@
 <button onclick="pilihBrand('BY.U')" id="br-BY.U" class="brand-btn bg-white border p-2 rounded-xl text-[10px] font-bold">BY.U</button>
 <button onclick="pilihBrand('LAINNYA')" id="br-LAINNYA" class="brand-btn bg-white border p-2 rounded-xl text-[10px] font-bold">LAIN</button>
 </div>
-<div class="flex gap-2 mt-2 items-center flex-wrap"><span class="text-[11px]">Paket:</span><select id="paket" class="bg-gray-100 rounded-full px-3 py-1 text-[11px] font-bold"><option>1GB</option><option>2GB</option><option>3GB</option><option>5GB</option><option>7GB</option><option>10GB</option><option>15GB</option><option>20GB</option><option>Unlimited</option></select><span class="text-[11px]">Brand: <b id="brandTerpilih" class="text-red-600">AXIS</b></span></div>
+<div class="flex gap-2 mt-2 items-center"><span class="text-[11px]">Paket:</span><select id="paket" class="bg-gray-100 rounded-full px-3 py-1 text-[11px] font-bold"><option>1GB</option><option>2GB</option><option>3GB</option><option>5GB</option><option>10GB</option><option>20GB</option><option>Unlimited</option></select><span class="text-[11px]">Brand: <b id="brandTerpilih" class="text-red-600">AXIS</b></span></div>
 </div>
-<input id="nomor" placeholder="No HP / No Meter / No Rek" class="w-full bg-gray-100 p-4 rounded-2xl mb-3 text-[13px] outline-none">
-<div class="grid grid-cols-2 gap-3 mb-3"><input id="nominal" type="number" placeholder="Nominal" class="bg-gray-100 p-4 rounded-2xl text-[13px] outline-none"><input id="untung" type="number" placeholder="Admin / Untung" class="bg-red-50 p-4 rounded-2xl text-[13px] outline-none font-bold border border-red-100"></div>
-<button onclick="simpan()" class="w-full bg-red-600 text-white p-4 rounded-2xl font-black text-[13px]">SIMPAN TRANSAKSI</button>
-</div>
-</div>
-
-<!-- AKSESORIS -->
-<div id="box-aksesoris" class="hidden">
-<div class="bg-white p-4 rounded-[20px] border"><div class="font-bold text-[14px] mb-3">📦 Stok Aksesoris</div><input id="namaB" placeholder="Nama Barang" class="w-full bg-gray-100 p-3 rounded-2xl mb-2 text-[12px]"><div class="grid grid-cols-3 gap-2 mb-2"><input id="modB" type="number" placeholder="Modal" class="bg-gray-100 p-3 rounded-2xl text-[12px]"><input id="jualB" type="number" placeholder="Jual" class="bg-gray-100 p-3 rounded-2xl text-[12px]"><input id="stokB" type="number" placeholder="Stok" class="bg-gray-100 p-3 rounded-2xl text-[12px]"></div><button onclick="tambahStok()" class="w-full bg-black text-white p-3 rounded-2xl font-bold text-[12px]">+ TAMBAH</button><div id="listStok" class="mt-3 text-[11px]"></div></div>
-</div>
-
-<div class="bg-white p-4 rounded-[20px] border mt-3"><div class="flex justify-between font-bold text-[13px]"><span>Semua Transaksi</span><span class="text-green-600" id="totalRp">Rp 0</span></div><div id="list" class="mt-3 text-[11px]"></div></div>
-
-<!-- MODAL EDIT SALDO -->
-<div id="modalSaldo" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50" style="display:none">
-<div class="bg-white p-5 rounded-[20px] w-full max-w-sm">
-<b class="text-[14px]">Edit 4 Saldo Awal</b>
-<div class="grid gap-2 mt-3">
-<input id="inKes" type="number" placeholder="Saldo Kes Awal (Laci)" class="bg-gray-100 p-3 rounded-xl text-[12px]">
-<input id="inBank" type="number" placeholder="Saldo Bank Awal" class="bg-blue-50 p-3 rounded-xl text-[12px]">
-<input id="inEwal" type="number" placeholder="Saldo E-Wallet Awal" class="bg-purple-50 p-3 rounded-xl text-[12px]">
-<input id="inApp" type="number" placeholder="Saldo Aplikasi Lainnya Awal" class="bg-orange-50 p-3 rounded-xl text-[12px]">
-</div>
-<div class="grid grid-cols-2 gap-2 mt-3"><button onclick="closeSaldo()" class="bg-gray-100 p-3 rounded-xl font-bold text-[12px]">BATAL</button><button onclick="saveSaldo()" class="bg-red-600 text-white p-3 rounded-xl font-bold text-[12px]">SIMPAN</button></div>
-</div>
-</div>
-
-<script>
-const sb=supabase.createClient("https://jmukkudafhilkbllirue.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptdWtrdWRhZmhpbGtibGxpcnVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1Mzg3NDUsImV4cCI6MjEwNjExNDc0NX0.BqxV1PS2Ypt5MSh5ItVDndOD05lrZdq_wFC9w1hDqXY");
-let jenis='perdana'; let brand='AXIS';
-function pilihBrand(b){brand=b;document.querySelectorAll('.brand-btn').forEach(e=>e.className='brand-btn bg-white border p-2 rounded-xl text-[10px] font-bold');document.getElementById('br-'+b).className='brand-btn bg-black text-white p-2 rounded-xl text-[10px] font-bold border';document.getElementById('brandTerpilih').innerText=b;}
-function setJenis(j){jenis=j;['tarik','token','wallet','pulsa','transfer','perdana'].forEach(k=>{let e=document.getElementById('bt-'+k);if(e)e.className=k==j?'bg-red-600 text-white border p-3 rounded-2xl font-bold text-[11px]':'bg-white border p-3 rounded-2xl font-bold text-[11px]'});let judul={tarik:'💸 Tarik Tunai',token:'⚡ Token',wallet:'👛 E-Wallet',pulsa:'📱 Pulsa',transfer:'🏦 Transfer',perdana:'📶 Voucher / Perdana - V.Tembak'};document.getElementById('judulForm').innerText=judul[j];document.getElementById('brandBox').style.display=(j=='perdana'||j=='pulsa')?'block':'none';}
-function setTab(t){document.getElementById('box-layanan').classList.toggle('hidden',t!='layanan');document.getElementById('box-aksesoris').classList.toggle('hidden',t!='aksesoris');document.getElementById('tab-layanan').className=t=='layanan'?'flex-1 bg-red-600 text-white p-3 rounded-full font-bold text-[12px]':'flex-1 bg-gray-100 p-3 rounded-full font-bold text-[12px]';document.getElementById('tab-aksesoris').className=t=='aksesoris'?'flex-1 bg-red-600 text-white p-3 rounded-full font-bold text-[12px]':'flex-1 bg-gray-100 p-3 rounded-full font-bold text-[12px]';}
-function editSaldo(){document.getElementById('modalSaldo').style.display='flex'; document.getElementById('inKes').value=localStorage.getItem('sKes')||''; document.getElementById('inBank').value=localStorage.getItem('sBank')||''; document.getElementById('inEwal').value=localStorage.getItem('sEwal')||''; document.getElementById('inApp').value=localStorage.getItem('sApp')||'';}
-function closeSaldo(){document.getElementById('modalSaldo').style.display='none';}
-function saveSaldo(){localStorage.setItem('sKes',document.getElementById('inKes').value||0); localStorage.setItem('sBank',document.getElementById('inBank').value||0); localStorage.setItem('sEwal',document.getElementById('inEwal').value||0); localStorage.setItem('sApp',document.getElementById('inApp').value||0); closeSaldo(); load();}
-async function simpan(){let no=document.getElementById('nomor').value;let nom=parseInt(document.getElementById('nominal').value)||0;let unt=parseInt(document.getElementById('untung').value)||0;if(!no||!unt)return alert('Isi nomor & untung');let paket=document.getElementById('paket').value;let nama=`${jenis.toUpperCase()} ${no}`; if(jenis=='perdana')nama=`V.TEMBAK ${brand} ${paket} ${no}`; await sb.from('transaksi').insert([{jenis,nama_barang:nama,modal:nom,jual:nom+unt,untung:unt,jumlah:1}]); document.getElementById('nomor').value='';document.getElementById('nominal').value='';document.getElementById('untung').value=''; load();}
-async function load(){let{data}=await sb.from('transaksi').select('*').order('id',{ascending:false}).limit(50); let tu=0,tm=0; let mutKes=0,mutBank=0,mutEwal=0,mutApp=0; (data||[]).forEach(t=>{tu+=t.untung||0;tm+=t.jual||0; if(t.jenis=='tarik'||t.jenis=='transfer')mutBank+=t.jual||0; else if(t.jenis=='wallet')mutEwal+=t.jual||0; else if(t.jenis=='token'||t.jenis=='pulsa'||t.jenis=='perdana')mutApp+=t.jual||0; else mutKes+=t.jual||0;}); document.getElementById('list').innerHTML=(data||[]).map(t=>`<div class="flex justify-between border-b py-2.5"><span>${t.nama_barang}</span><b class="text-green-600">+${t.untung}</b></div>`).join('')||'Belum ada'; document.getElementById('totalUnt').innerText='Rp '+tu.toLocaleString('id-ID'); document.getElementById('totalRp').innerText='Rp '+tu.toLocaleString('id-ID'); document.getElementById('jmlTrx').innerText=(data||[]).length; document.getElementById('mutasi').innerText='Rp '+tm.toLocaleString('id-ID'); let sKes=parseInt(localStorage.getItem('sKes')||0), sBank=parseInt(localStorage.getItem('sBank')||0), sEwal=parseInt(localStorage.getItem('sEwal')||0), sApp=parseInt(localStorage.getItem('sApp')||0); document.getElementById('sKesA').innerText='Rp '+sKes.toLocaleString('id-ID'); document.getElementById('sBankA').innerText='Rp '+sBank.toLocaleString('id-ID'); document.getElementById('sEwalA').innerText='Rp '+sEwal.toLocaleString('id-ID'); document.getElementById('sAppA').innerText='Rp '+sApp.toLocaleString('id-ID'); document.getElementById('sKesAk').innerText='Rp '+(sKes+mutKes).toLocaleString('id-ID'); document.getElementById('sBankAk').innerText='Rp '+(sBank+mutBank).toLocaleString('id-ID'); document.getElementById('sEwalAk').innerText='Rp '+(sEwal+mutEwal).toLocaleString('id-ID'); document.getElementById('sAppAk').innerText='Rp '+(sApp+mutApp).toLocaleString('id-ID'); document.getElementById('sTotalAk').innerText='Rp '+(sKes+sBank+sEwal+sApp+tm).toLocaleString('id-ID');}
-async function tambahStok(){let na=document.getElementById('namaB').value;let mo=parseInt(document.getElementById('modB').value);let ju=parseInt(document.getElementById('jualB').value);let si=parseInt(document.getElementById('stokB').value)||0;if(!na)return;await sb.from('stok').insert([{nama:na,modal:mo,jual:ju,sisa:si}]);loadStok();}
-async function loadStok(){let{data}=await sb.from('stok').select('*').order('id',{ascending:false}); document.getElementById('listStok').innerHTML=(data||[]).map(s=>`<div class="flex justify-between py-2 border-b"><span>${s.nama} (${s.sisa})</span><span>${s.jual}</span></div>`).join('');}
-setJenis('perdana'); load(); loadStok();
-</script>
-</body></html>
+<div id="walletBox" class="hidden mb-3"><div class="text-[10px] font-bold text-gray-400 mb-2">PILIH E-WALLET TUJUAN</div><div class="grid grid-cols-4 gap-2"><button onclick="pilihWallet('DANA')" id="w-DANA" class="w-btn bg-black text-white p-2 rounded-xl text-[10px] font-bold">DANA</button><button onclick="pilihWallet('OVO')" id="w-OVO" class="w-btn bg-white border p-2 rounded-xl text-[10px] font-bold">OVO</button><button onclick="pilihWallet('GOPAY')" id="w-GOPAY" class="w-btn bg-white border p-2 rounded-xl text-[10px] font-bold">GOPAY</button><button onclick="pilihWallet('SPAY')" id="w-SPAY" class="w-btn bg-white border p-2 rounded-xl text-[10px] font-bold">SPAY</button><button onclick="pilihWallet('LINKAJA')" id="w-LINKAJA" class="w-btn bg-white border p-2 rounded-xl text-[10px] font-bold">LINKAJA</button></div></div>
+<div id="bankBox" class="hidden mb-3"><div class="text-[10px] font-bold text-gray-400 mb-2">PILIH BANK TUJUAN</div><div class="grid grid-cols-4 gap-2"><button onclick="pilihBank('BCA')" id="b-BCA" class
