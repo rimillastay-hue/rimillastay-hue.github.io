@@ -2,147 +2,78 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RRQ CELLULAR</title>
+<title>RRQ CELLULAR PRO</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
-<style>body{font-family:'Plus Jakarta Sans',sans-serif}</style>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<style>body{font-family:'Plus Jakarta Sans',sans-serif;background:#f8f9fb}</style>
 </head>
-<body class="bg-[#f6f6f6] min-h-screen p-3">
-<div class="max-w-md mx-auto">
-<div class="bg-white rounded-[20px] p-4 mb-3 flex justify-between items-center border">
-<div class="flex items-center gap-3"><div class="w-10 h-10 bg-red-600 rounded-xl flex items-center justify-center text-white font-black">R</div><div><h1 class="font-extrabold">RRQ CELLULAR</h1><p class="text-[11px] text-gray-400">Pekanbaru - Online</p></div></div>
-<div class="text-[11px] font-bold px-3 py-1.5 rounded-full bg-green-100 text-green-700">● ONLINE</div>
-</div>
-<div class="bg-white rounded-[20px] p-2 mb-3 border flex gap-2">
-<button onclick="tab('layanan')" id="tab-layanan" class="flex-1 bg-red-600 text-white rounded-xl py-2.5 text-xs font-bold">LAYANAN</button>
-<button onclick="tab('produk')" id="tab-produk" class="flex-1 bg-gray-100 rounded-xl py-2.5 text-xs font-bold">AKSESORIS & PERDANA</button>
-</div>
-
-<div id="view-layanan">
-<div class="grid grid-cols-3 gap-2 mb-3">
-<button onclick="setJenis('tarik')" id="b-tarik" class="bg-red-600 text-white rounded-2xl p-3 text-[10px] font-bold">💸 TARIK</button>
-<button onclick="setJenis('token')" id="b-token" class="bg-white border rounded-2xl p-3 text-[10px] font-bold">⚡ TOKEN</button>
-<button onclick="setJenis('ewallet')" id="b-ewallet" class="bg-white border rounded-2xl p-3 text-[10px] font-bold">👛 WALLET</button>
-<button onclick="setJenis('pulsa')" id="b-pulsa" class="bg-white border rounded-2xl p-3 text-[10px] font-bold">📱 PULSA</button>
-<button onclick="setJenis('transfer')" id="b-transfer" class="bg-white border rounded-2xl p-3 text-[10px] font-bold">🏦 TRANSFER</button>
-</div>
-<div class="bg-white rounded-[20px] p-4 mb-3 border">
-<h2 id="judulForm" class="font-bold text-sm mb-3">💸 Tarik Tunai</h2>
-<input id="nomor" placeholder="No HP / No Meter / No Rekening" class="w-full bg-gray-50 border rounded-xl p-3 mb-2 text-sm">
-<div class="grid grid-cols-2 gap-2 mb-2"><input id="nominal" type="number" placeholder="Nominal" class="bg-gray-50 border rounded-xl p-3 text-sm"><input id="admin" type="number" placeholder="Admin" class="bg-red-50 border rounded-xl p-3 text-sm font-bold"></div>
-<select id="operator" class="w-full bg-gray-50 border rounded-xl p-3 mb-3 text-sm hidden"></select>
-<button onclick="simpanLayanan()" class="w-full bg-red-600 text-white rounded-xl py-3.5 font-black text-sm">SIMPAN TRANSAKSI</button>
-</div>
-</div>
-
-<div id="view-produk" class="hidden">
-<div class="bg-white rounded-[20px] p-4 mb-3 border">
-<h2 class="font-bold text-sm mb-3">Tambah Stok Toko</h2>
-<input id="nama" placeholder="Ex: Casing, TG, Charger, Voucher 5GB, Perdana 10GB" class="w-full bg-gray-50 border rounded-xl p-3 mb-2 text-sm">
-<div class="grid grid-cols-3 gap-2 mb-3"><input id="modal" type="number" placeholder="Modal" class="bg-gray-50 border rounded-xl p-3 text-sm"><input id="jual" type="number" placeholder="Jual" class="bg-gray-50 border rounded-xl p-3 text-sm"><input id="sisa" type="number" placeholder="Stok" class="bg-gray-50 border rounded-xl p-3 text-sm"></div>
-<button onclick="tambahStok()" class="w-full bg-black text-white rounded-xl py-3.5 font-bold text-sm">SIMPAN STOK</button>
-</div>
-<div class="bg-white rounded-[20px] p-4 mb-3 border">
-<div class="flex justify-between mb-3"><h2 class="font-bold text-sm">Stok Toko</h2><span id="jmlStok" class="text-xs bg-gray-100 px-2 py-1 rounded-full">0</span></div>
-<div id="listStok"></div>
-<div class="mt-3 grid grid-cols-3 gap-2"><select id="pilihBarang" class="col-span-2 bg-gray-50 border rounded-xl p-3 text-sm"></select><button onclick="jualStok()" class="bg-green-600 text-white rounded-xl font-bold text-sm">JUAL</button></div>
-</div>
-</div>
-
-<div class="bg-white rounded-[20px] p-4 border">
-<div class="flex justify-between mb-3"><h2 class="font-bold text-sm">Riwayat Untung</h2><span id="totalUntung" class="font-black text-green-600 text-sm">Rp 0</span></div>
-<div id="listTransaksi"></div>
-</div>
-</div>
-<script>
-const supabaseClient=supabase.createClient("https://jmukkudafhilkbllirue.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptdWtrdWRhZmhpbGtibGxpcnVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1Mzg3NDUsImV4cCI6MjEwNjExNDc0NX0.BqxV1PS2Ypt5MSh5ItVDndOD05lrZdq_wFC9w1hDqXY");
-let jenis='tarik', stokCache=[];
-function tab(t){document.getElementById('view-layanan').classList.toggle('hidden',t!='layanan');document.getElementById('view-produk').classList.toggle('hidden',t!='produk');document.getElementById('tab-layanan').className=t=='layanan'?'flex-1 bg-red-600 text-white rounded-xl py-2.5 text-xs font-bold':'flex-1 bg-gray-100 rounded-xl py-2.5 text-xs font-bold';document.getElementById('tab-produk').className=t=='produk'?'flex-1 bg-red-600 text-white rounded-xl py-2.5 text-xs font-bold':'flex-1 bg-gray-100 rounded-xl py-2.5 text-xs font-bold';}
-function setJenis(j){jenis=j;document.querySelectorAll('[id^=b-]').forEach(b=>b.className='bg-white border rounded-2xl p-3 text-[10px] font-bold');document.getElementById('b-'+j).className='bg-red-600 text-white rounded-2xl p-3 text-[10px] font-bold';const titles={tarik:'💸 Tarik Tunai',token:'⚡ Token Listrik',ewallet:'👛 Top Up E-Wallet',pulsa:'📱 Pulsa / Kuota',transfer:'🏦 Transfer Bank'};document.getElementById('judulForm').textContent=titles[j];const op=document.getElementById('operator');if(j=='ewallet'){op.classList.remove('hidden');op.innerHTML='<option>DANA</option><option>OVO</option><option>GOPAY</option><option>SHOPEEPAY</option>';}else if(j=='pulsa'){op.classList.remove('hidden');op.innerHTML='<option>TELKOMSEL</option><option>XL</option><option>INDOSAT</option><option>AXIS</option><option>TRI</option>';}else if(j=='transfer'){op.classList.remove('hidden');op.innerHTML='<option>BCA</option><option>BRI</option><option>BNI</option><option>MANDIRI</option><option>BSI</option>';}else{op.classList.add('hidden');}}
-async function simpanLayanan(){const nomor=document.getElementById('nomor').value;const nominal=parseInt(document.getElementById('nominal').value)||0;const admin=parseInt(document.getElementById('admin').value)||0;const op=document.getElementById('operator').value||'';if(!nomor||!nominal||!admin)return alert('Lengkapi!');const nama=`${jenis.toUpperCase()} ${op} ${nomor}`;await supabaseClient.from('transaksi').insert([{jenis,nama_barang:nama,modal:nominal,jual:nominal+admin,untung:admin,jumlah:1}]);document.getElementById('nomor').value='';document.getElementById('nominal').value='';document.getElementById('admin').value='';loadTransaksi();}
-async function tambahStok(){const nama=document.getElementById('nama').value;const modal=parseInt(document.getElementById('modal').value);const jual=parseInt(document.getElementById('jual').value);const sisa=parseInt(document.getElementById('sisa').value);if(!nama||!modal||!jual)return alert('Lengkapi!');await supabaseClient.from('stok').insert([{nama,modal,jual,sisa}]);loadStok();document.getElementById('nama').value='';document.getElementById('modal').value='';document.getElementById('jual').value='';document.getElementById('sisa').value='';}
-async function loadStok(){const {data}=await supabaseClient.from('stok').select('*').order('id',{ascending:false});stokCache=data||[];document.getElementById('jmlStok').textContent=stokCache.length;document.getElementById('listStok').innerHTML=stokCache.map(s=>`<div class="flex justify-between border rounded-xl p-2.5 mb-2 text-[12px]"><div><b>${s.nama}</b><br><span class="text-[10px] text-gray-500">Sisa ${s.sisa} • Untung Rp${(s.jual-s.modal).toLocaleString('id-ID')}</span></div><button onclick="hapusStok(${s.id})" class="text-gray-300">✕</button></div>`).join('');document.getElementById('pilihBarang').innerHTML=stokCache.filter(s=>s.sisa>0).map(s=>`<option value="${s.id}">${s.nama} - ${s.sisa}</option>`).join('');}
-async function jualStok(){const id=document.getElementById('pilihBarang').value;if(!id)return alert('Pilih barang');const {data:b}=await supabaseClient.from('stok').select('*').eq('id',id).single();await supabaseClient.from('stok').update({sisa:b.sisa-1}).eq('id',id);await supabaseClient.from('transaksi').insert([{jenis:'produk',nama_barang:b.nama,modal:b.modal,jual:b.jual,untung:b.jual-b.modal,jumlah:1}]);loadStok();loadTransaksi();}
-async function hapusStok(id){await supabaseClient.from('stok').delete().eq('id',id);loadStok();}
-async function loadTransaksi(){const {data}=await supabaseClient.from('transaksi').select('*').order('id',{ascending:false}).limit(50);let total=0;document.getElementById('listTransaksi').innerHTML=(data||[]).map(t=>{total+=t.untung;return `<div class="flex justify-between border-b py-2 text-[11px]"><span>${t.nama_barang}</span><span class="font-bold text-green-600">+Rp${t.untung.toLocaleString('id-ID')}</span></div>`}).join('');document.getElementById('totalUntung').textContent='Rp '+total.toLocaleString('id-ID');}
-setJenis('tarik');loadStok();loadTransaksi();
-</script>
-</body>
-  </html>
-  <!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RRQ CELLULAR</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
-<style>body{font-family:'Plus Jakarta Sans',sans-serif}</style>
-</head>
-<body class="bg-[#fff5f5] min-h-screen p-3">
+<body class="min-h-screen p-4">
 <div class="max-w-md mx-auto">
 
-<div class="bg-white rounded-[20px] p-4 mb-3 flex justify-between items-center border">
-<div class="flex items-center gap-3"><div class="w-10 h-10 bg-red-600 rounded-xl flex items-center justify-center text-white font-black">R</div><div><h1 class="font-extrabold">RRQ CELLULAR</h1><p class="text-[11px] text-gray-400">Pekanbaru • Voucher Tembak Ready</p></div></div>
-<div class="text-[11px] font-bold px-3 py-1.5 rounded-full bg-green-100 text-green-700">● ONLINE</div>
+<!-- HEADER PRO -->
+<div class="bg-black rounded-[24px] p-5 mb-4 text-white flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 bg-[#FF0000] rounded-2xl flex items-center justify-center font-black text-xl">R</div>
+<div><h1 class="font-extrabold text-[16px]">RRQ CELLULAR</h1><p class="text-[11px] text-zinc-400">Pekanbaru • Buka Setiap Hari</p></div>
+</div>
+<div class="bg-white/10 px-3 py-1.5 rounded-full text-[11px] font-bold">● ONLINE</div>
 </div>
 
-<div class="bg-white rounded-[20px] p-2 mb-3 border flex gap-2">
-<button onclick="tab('layanan')" id="tab-layanan" class="flex-1 bg-red-600 text-white rounded-xl py-2.5 text-xs font-bold">LAYANAN</button>
-<button onclick="tab('produk')" id="tab-produk" class="flex-1 bg-gray-100 rounded-xl py-2.5 text-xs font-bold">FISIK & AKSESORIS</button>
+<!-- STAT UNTUNG -->
+<div class="grid grid-cols-2 gap-3 mb-4">
+<div class="bg-white rounded-[20px] p-4 border shadow-sm"><p class="text-[11px] text-gray-400 font-bold">TOTAL UNTUNG</p><h2 id="totalUntung" class="font-black text-[20px] text-green-600">Rp 0</h2><p class="text-[10px] text-gray-400">Hari ini</p></div>
+<div class="bg-white rounded-[20px] p-4 border shadow-sm"><p class="text-[11px] text-gray-400 font-bold">TRANSAKSI</p><h2 id="totalTrx" class="font-black text-[20px]">0</h2><p class="text-[10px] text-gray-400">Kali jual</p></div>
 </div>
 
+<!-- TAB -->
+<div class="bg-white rounded-[16px] p-1.5 mb-4 border flex gap-1.5">
+<button onclick="tab('layanan')" id="tab-layanan" class="flex-1 bg-black text-white rounded-[12px] py-3 text-[12px] font-bold">💼 LAYANAN DIGITAL</button>
+<button onclick="tab('produk')" id="tab-produk" class="flex-1 bg-gray-100 text-gray-500 rounded-[12px] py-3 text-[12px] font-bold">📦 TOKO FISIK</button>
+</div>
+
+<!-- LAYANAN -->
 <div id="view-layanan">
-<div class="grid grid-cols-3 gap-2 mb-3">
-<button onclick="setJenis('tarik')" id="b-tarik" class="bg-red-600 text-white rounded-2xl p-3 text-[10px] font-bold">💸 TARIK</button>
-<button onclick="setJenis('token')" id="b-token" class="bg-white border rounded-2xl p-3 text-[10px] font-bold">⚡ TOKEN</button>
-<button onclick="setJenis('ewallet')" id="b-ewallet" class="bg-white border rounded-2xl p-3 text-[10px] font-bold">👛 WALLET</button>
-<button onclick="setJenis('pulsa')" id="b-pulsa" class="bg-white border rounded-2xl p-3 text-[10px] font-bold">📱 PULSA</button>
-<button onclick="setJenis('transfer')" id="b-transfer" class="bg-white border rounded-2xl p-3 text-[10px] font-bold">🏦 TRANSFER</button>
-<button onclick="setJenis('v_tembak')" id="b-v_tembak" class="bg-white border rounded-2xl p-3 text-[10px] font-bold">🔫 V.TEMBAK</button>
+<div class="grid grid-cols-3 gap-2.5 mb-4">
+<button onclick="setJenis('tarik')" id="b-tarik" class="layanan-btn bg-black text-white rounded-[18px] p-4 text-[11px] font-bold shadow"><div class="text-[20px] mb-1">💸</div>TARIK TUNAI</button>
+<button onclick="setJenis('token')" id="b-token" class="layanan-btn bg-white border rounded-[18px] p-4 text-[11px] font-bold"><div class="text-[20px] mb-1">⚡</div>TOKEN</button>
+<button onclick="setJenis('ewallet')" id="b-ewallet" class="layanan-btn bg-white border rounded-[18px] p-4 text-[11px] font-bold"><div class="text-[20px] mb-1">👛</div>E-WALLET</button>
+<button onclick="setJenis('pulsa')" id="b-pulsa" class="layanan-btn bg-white border rounded-[18px] p-4 text-[11px] font-bold"><div class="text-[20px] mb-1">📱</div>PULSA</button>
+<button onclick="setJenis('transfer')" id="b-transfer" class="layanan-btn bg-white border rounded-[18px] p-4 text-[11px] font-bold"><div class="text-[20px] mb-1">🏦</div>TRANSFER</button>
+<button onclick="setJenis('v_tembak')" id="b-v_tembak" class="layanan-btn bg-white border rounded-[18px] p-4 text-[11px] font-bold ring-2 ring-red-500"><div class="text-[20px] mb-1">🔫</div>V.TEMBAK</button>
 </div>
-<div class="bg-white rounded-[20px] p-4 mb-3 border">
-<h2 id="judulForm" class="font-bold text-sm mb-3">💸 Tarik Tunai</h2>
-<input id="nomor" placeholder="No HP / No Meter / No Rek" class="w-full bg-gray-50 border rounded-xl p-3 mb-2 text-sm outline-none">
-<select id="operator" class="w-full bg-gray-50 border rounded-xl p-3 mb-2 text-sm hidden"></select>
-<div class="grid grid-cols-2 gap-2 mb-3"><input id="nominal" type="number" placeholder="Modal" class="bg-gray-50 border rounded-xl p-3 text-sm"><input id="admin" type="number" placeholder="Untung" class="bg-red-50 border rounded-xl p-3 text-sm font-bold"></div>
-<button onclick="simpanLayanan()" class="w-full bg-red-600 text-white rounded-xl py-3.5 font-black text-sm">SIMPAN TRANSAKSI</button>
+
+<div class="bg-white rounded-[24px] p-5 border shadow-sm">
+<h2 id="judulForm" class="font-extrabold text-[14px] mb-4">💸 Tarik Tunai</h2>
+<label class="text-[11px] font-bold text-gray-500">NOMOR TUJUAN</label>
+<input id="nomor" placeholder="08xx / No Meter / No Rek" class="w-full bg-[#f6f7f9] border-0 rounded-[14px] p-4 mb-3 text-sm outline-none focus:ring-2 focus:ring-black">
+<label class="text-[11px] font-bold text-gray-500">PAKET / OPERATOR</label>
+<select id="operator" class="w-full bg-[#f6f7f9] border-0 rounded-[14px] p-4 mb-3 text-sm hidden"></select>
+<div class="grid grid-cols-2 gap-3 mb-4">
+<div><label class="text-[11px] font-bold text-gray-500">MODAL</label><input id="nominal" type="number" placeholder="0" class="w-full bg-[#f6f7f9] border-0 rounded-[14px] p-4 text-sm"></div>
+<div><label class="text-[11px] font-bold text-gray-500">UNTUNG</label><input id="admin" type="number" placeholder="0" class="w-full bg-red-50 border-0 rounded-[14px] p-4 text-sm font-bold text-red-600"></div>
+</div>
+<button onclick="simpanLayanan()" class="w-full bg-[#FF0000] active:bg-red-700 text-white rounded-[14px] py-4 font-black text-[13px] shadow-lg shadow-red-200">SIMPAN & CATAT UNTUNG →</button>
 </div>
 </div>
 
+<!-- PRODUK FISIK -->
 <div id="view-produk" class="hidden">
-<div class="bg-white rounded-[20px] p-4 mb-3 border">
-<h2 class="font-bold text-sm mb-3">Tambah Aksesoris / Perdana Fisik</h2>
-<input id="nama" placeholder="Casing, TG, Charger, Voucher Fisik" class="w-full bg-gray-50 border rounded-xl p-3 mb-2 text-sm">
-<div class="grid grid-cols-3 gap-2 mb-3"><input id="modal" type="number" placeholder="Modal" class="bg-gray-50 border rounded-xl p-3 text-sm"><input id="jual" type="number" placeholder="Jual" class="bg-gray-50 border rounded-xl p-3 text-sm"><input id="sisa" type="number" placeholder="Stok" class="bg-gray-50 border rounded-xl p-3 text-sm"></div>
-<button onclick="tambahStok()" class="w-full bg-black text-white rounded-xl py-3.5 font-bold text-sm">SIMPAN STOK</button>
+<div class="bg-white rounded-[24px] p-5 border shadow-sm mb-4">
+<h2 class="font-bold text-[13px] mb-3">Tambah Barang Fisik</h2>
+<input id="nama" placeholder="Contoh: Perdana Telkomsel 10GB, Voucher Fisik, Casing" class="w-full bg-[#f6f7f9] border-0 rounded-[14px] p-4 mb-3 text-sm">
+<div class="grid grid-cols-3 gap-2 mb-3">
+<input id="modal" type="number" placeholder="Modal" class="bg-[#f6f7f9] rounded-[12px] p-3 text-sm">
+<input id="jual" type="number" placeholder="Jual" class="bg-[#f6f7f9] rounded-[12px] p-3 text-sm">
+<input id="sisa" type="number" placeholder="Stok" class="bg-[#f6f7f9] rounded-[12px] p-3 text-sm">
 </div>
-<div class="bg-white rounded-[20px] p-4 mb-3 border">
-<div class="flex justify-between mb-3"><h2 class="font-bold text-sm">Stok Fisik</h2><span id="jmlStok" class="text-xs bg-gray-100 px-2 py-1 rounded-full">0</span></div>
-<div id="listStok"></div>
-<div class="mt-3 grid grid-cols-3 gap-2"><select id="pilihBarang" class="col-span-2 bg-gray-50 border rounded-xl p-3 text-sm"></select><button onclick="jualStok()" class="bg-green-600 text-white rounded-xl font-bold text-sm">JUAL</button></div>
+<button onclick="tambahStok()" class="w-full bg-black text-white rounded-[14px] py-4 font-bold text-[13px]">+ TAMBAH KE STOK</button>
+</div>
+<div class="bg-white rounded-[24px] p-5 border shadow-sm">
+<div class="flex justify-between mb-3"><h2 class="font-bold text-[13px]">Stok Toko</h2><span id="jmlStok" class="text-[11px] bg-black text-white px-2.5 py-1 rounded-full">0</span></div>
+<div id="listStok" class="mb-4"></div>
+<div class="flex gap-2"><select id="pilihBarang" class="flex-1 bg-[#f6f7f9] rounded-[12px] p-3 text-sm"></select><button onclick="jualStok()" class="bg-green-600 text-white rounded-[12px] px-6 font-bold text-[12px]">JUAL</button></div>
 </div>
 </div>
 
-<div class="bg-white rounded-[20px] p-4 border">
-<div class="flex justify-between mb-3"><h2 class="font-bold text-sm">Riwayat Untung Hari Ini</h2><span id="totalUntung" class="font-black text-green-600 text-sm">Rp 0</span></div>
-<div id="listTransaksi"></div>
-</div>
-
-</div>
-<script>
-const supabaseClient=supabase.createClient("https://jmukkudafhilkbllirue.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptdWtrdWRhZmhpbGtibGxpcnVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1Mzg3NDUsImV4cCI6MjEwNjExNDc0NX0.BqxV1PS2Ypt5MSh5ItVDndOD05lrZdq_wFC9w1hDqXY");
-let jenis='tarik';
-function tab(t){document.getElementById('view-layanan').classList.toggle('hidden',t!='layanan');document.getElementById('view-produk').classList.toggle('hidden',t!='produk');document.getElementById('tab-layanan').className=t=='layanan'?'flex-1 bg-red-600 text-white rounded-xl py-2.5 text-xs font-bold':'flex-1 bg-gray-100 rounded-xl py-2.5 text-xs font-bold';document.getElementById('tab-produk').className=t=='produk'?'flex-1 bg-red-600 text-white rounded-xl py-2.5 text-xs font-bold':'flex-1 bg-gray-100 rounded-xl py-2.5 text-xs font-bold';}
-function setJenis(j){jenis=j;document.querySelectorAll('[id^=b-]').forEach(b=>b.className='bg-white border rounded-2xl p-3 text-[10px] font-bold');document.getElementById('b-'+j).className='bg-red-600 text-white rounded-2xl p-3 text-[10px] font-bold';const titles={tarik:'💸 Tarik Tunai',token:'⚡ Token Listrik',ewallet:'👛 Top Up E-Wallet',pulsa:'📱 Pulsa',transfer:'🏦 Transfer',v_tembak:'🔫 Voucher Tembak'};document.getElementById('judulForm').textContent=titles[j];const op=document.getElementById('operator');const nm=document.getElementById('nomor');if(j=='ewallet'){op.classList.remove('hidden');op.innerHTML='<option>DANA</option><option>OVO</option><option>GOPAY</option><option>SHOPEEPAY</option>';nm.placeholder='No HP E-Wallet';}else if(j=='pulsa'){op.classList.remove('hidden');op.innerHTML='<option>TELKOMSEL</option><option>XL</option><option>INDOSAT</option><option>AXIS</option><option>TRI</option>';nm.placeholder='No HP Pulsa';}else if(j=='transfer'){op.classList.remove('hidden');op.innerHTML='<option>BCA</option><option>BRI</option><option>BNI</option><option>MANDIRI</option>';nm.placeholder='No Rekening';}else if(j=='v_tembak'){op.classList.remove('hidden');op.innerHTML='<option>AXIS 1GB</option><option>AXIS 3GB</option><option>AXIS 5GB</option><option>XL 7GB</option><option>TSEL 2GB</option><option>TSEL 5GB</option><option>INDOSAT 3GB</option>';nm.placeholder='No HP yang ditembak voucher';}else if(j=='token'){op.classList.add('hidden');nm.placeholder='No Meter PLN';}else{op.classList.add('hidden');nm.placeholder='No HP / Nama';}}
-async function simpanLayanan(){const nomor=document.getElementById('nomor').value;const nominal=parseInt(document.getElementById('nominal').value)||0;const admin=parseInt(document.getElementById('admin').value)||0;const op=document.getElementById('operator').value||'';if(!nomor||!nominal||!admin)return alert('Lengkapi!');const nama=`${jenis.toUpperCase()} ${op} ${nomor}`;await supabaseClient.from('transaksi').insert([{jenis,nama_barang:nama,modal:nominal,jual:nominal+admin,untung:admin,jumlah:1}]);document.getElementById('nomor').value='';document.getElementById('nominal').value='';document.getElementById('admin').value='';loadTransaksi();}
-async function tambahStok(){const nama=document.getElementById('nama').value;const modal=parseInt(document.getElementById('modal').value);const jual=parseInt(document.getElementById('jual').value);const sisa=parseInt(document.getElementById('sisa').value);if(!nama||!modal||!jual)return alert('Lengkapi!');await supabaseClient.from('stok').insert([{nama,modal,jual,sisa}]);loadStok();document.getElementById('nama').value='';document.getElementById('modal').value='';document.getElementById('jual').value='';document.getElementById('sisa').value='';}
-async function loadStok(){const {data}=await supabaseClient.from('stok').select('*').order('id',{ascending:false});const list=data||[];document.getElementById('jmlStok').textContent=list.length;document.getElementById('listStok').innerHTML=list.map(s=>`<div class="flex justify-between border rounded-xl p-2.5 mb-2 text-[12px]"><div><b>${s.nama}</b><br><span class="text-[10px] text-gray-500">Sisa ${s.sisa} • Untung Rp${(s.jual-s.modal).toLocaleString('id-ID')}</span></div><button onclick="hapusStok(${s.id})" class="text-gray-300">✕</button></div>`).join('');document.getElementById('pilihBarang').innerHTML=list.filter(s=>s.sisa>0).map(s=>`<option value="${s.id}">${s.nama} - ${s.sisa}</option>`).join('');}
-async function jualStok(){const id=document.getElementById('pilihBarang').value;if(!id)return alert('Pilih');const {data:b}=await supabaseClient.from('stok').select('*').eq('id',id).single();await supabaseClient.from('stok').update({sisa:b.sisa-1}).eq('id',id);await supabaseClient.from('transaksi').insert([{jenis:'produk',nama_barang:b.nama,modal:b.modal,jual:b.jual,untung:b.jual-b.modal,jumlah:1}]);loadStok();loadTransaksi();}
-async function hapusStok(id){await supabaseClient.from('stok').delete().eq('id',id);loadStok();}
-async function loadTransaksi(){const {data}=await supabaseClient.from('transaksi').select('*').order('id',{ascending:false}).limit(50);let total=0;document.getElementById('listTransaksi').innerHTML=(data||[]).map(t=>{total+=t.untung||0;return `<div class="flex justify-between border-b py-2 text-[11px]"><span>${t.nama_barang}</span><span class="font-bold text-green-600">+Rp${(t.untung||0).toLocaleString('id-ID')}</span></div>`}).join('')||'<p class="text-[11px] text-gray-400 text-center py-4">Belum ada transaksi</p>';document.getElementById('totalUntung').textContent='Rp '+total.toLocaleString('id-ID');}
-setJenis('tarik');loadStok();loadTransaksi();
-</script>
-</body>
-</html>
+<!-- RIWAY
