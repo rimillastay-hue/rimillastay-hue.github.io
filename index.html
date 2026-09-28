@@ -1,51 +1,92 @@
-<!doctype html>
-<html lang="id">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>KonterKu</title>
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RRQ CELLULAR ONLINE</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{color-scheme:light dark;--bg:light-dark(#f5f7fb,#101318);--surface:light-dark(#fff,#171b21);--surface2:light-dark(#f0f3f7,#20252d);--text:light-dark(#172033,#f5f7fb);--muted:light-dark(#687386,#aeb7c5);--border:light-dark(#e3e7ee,#303742);--primary:light-dark(#2563eb,#60a5fa);--green:light-dark(#059669,#34d399);--red:light-dark(#dc2626,#f87171)}
-*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}#app{min-height:100vh;background:var(--bg)}
-header{padding:22px 20px 10px;display:flex;justify-content:space-between;align-items:center;gap:12px;max-width:1100px;margin:auto}h1{font-size:24px;margin:0}h2{font-size:18px;margin:0 0 14px}.sub{color:var(--muted);font-size:13px;margin-top:4px}.wrap{max-width:1100px;margin:auto;padding:12px 20px 36px}.tabs{display:flex;gap:8px;overflow:auto;padding:8px 0 16px}.tab,button{border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:10px;padding:10px 14px;font-weight:600;cursor:pointer}.tab.active{background:var(--primary);border-color:var(--primary);color:white}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px}.label{font-size:12px;color:var(--muted)}.money{font-size:22px;font-weight:800;margin-top:6px}.green{color:var(--green)}.red{color:var(--red)}.blue{color:var(--primary)}.section{margin-top:18px}.row{display:flex;gap:10px;align-items:center;justify-content:space-between}.actions{display:flex;gap:8px;flex-wrap:wrap}.primary{background:var(--primary);border-color:var(--primary);color:white}.danger{color:var(--red)}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px 8px;border-bottom:1px solid var(--border);font-size:13px}th{color:var(--muted);font-weight:600}.empty{color:var(--muted);padding:20px;text-align:center}.modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;padding:16px}.modal.show{display:flex}.box{width:min(520px,100%);background:var(--surface);border-radius:18px;padding:20px;border:1px solid var(--border)}form{display:grid;gap:11px}input,select{width:100%;padding:11px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);color:var(--text)}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.small{font-size:12px;color:var(--muted)}.stock-ok{color:var(--green)}.stock-low{color:var(--red)}
-@media(max-width:760px){.grid{grid-template-columns:1fr 1fr}.formgrid{grid-template-columns:1fr}.wrap{padding-left:14px;padding-right:14px}header{padding-left:14px;padding-right:14px}.money{font-size:19px}}
-@media(max-width:430px){.grid{grid-template-columns:1fr 1fr}.card{padding:13px}.tabs{gap:6px}.tab{padding:9px 11px}}
-</style>
-</head>
-<body><div id="login" style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--bg)"><div class="box" style="max-width:380px"><h1>🔐 KonterKu</h1><div class="sub" style="margin:8px 0 18px">Masukkan password untuk masuk</div><form onsubmit="login(event)"><label>Password<input id="loginPass" type="password" placeholder="Password" autocomplete="current-password" required></label><button class="primary" type="submit">Masuk</button><div id="loginError" class="small red"></div></form></div></div><div id="app" style="display:none">
-<header><div><h1>📱 KonterKu</h1><div class="sub">Management kas, saldo & stok sederhana</div></div><button onclick="resetData()">Reset</button></header>
-<div class="wrap"><div class="tabs" id="tabs"></div><main id="main"></main></div>
-<div class="modal" id="modal"><div class="box"><div class="row"><h2 id="modalTitle">Tambah</h2><button onclick="closeModal()">✕</button></div><div id="modalBody"></div></div></div>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,system-ui}
+body{background:#f6f7fb}
+.head{background:#c70000;color:#fff;padding:18px;text-align:center;position:sticky;top:0}
+.card{background:#fff;margin:10px;padding:14px;border-radius:14px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.row{display:flex;gap:8px}
+.stat{flex:1;background:#fff;border:1px solid #ffd6d6;border-radius:12px;padding:12px;text-align:center}
+.stat b{font-size:18px}
+input,select,button{width:100%;padding:12px;margin:6px 0;border-radius:10px;border:1px solid #ddd;font-size:15px}
+button{background:#c70000;color:#fff;font-weight:800;border:none}
+.badge{background:#ffe5e5;color:#c70000;padding:4px 8px;border-radius:20px;font-size:11px;font-weight:800}
+</style></head><body>
+<div class="head">
+<h2>RRQ CELLULAR - ONLINE</h2>
+<small id="status">● Menghubungkan...</small>
+<div style="margin-top:8px"><span class="badge" id="count">0 Produk</span></div>
 </div>
+<div style="padding:8px">
+<div class="row">
+<div class="stat">Modal Keluar<br><b id="tm">Rp 0</b></div>
+<div class="stat">Total Jual<br><b id="tj">Rp 0</b></div>
+<div class="stat">Untung Bersih<br><b id="tu" style="color:#c70000">Rp 0</b></div>
+</div>
+
+<div class="card">
+<h4>➕ Tambah Stok Baru (Sinkron Semua HP)</h4>
+<input id="nama" placeholder="Nama: V.Tsel 7/5">
+<div class="row"><input id="modal" type="number" placeholder="Modal 15300"><input id="hjual" type="number" placeholder="Jual 17000"></div>
+<input id="stok" type="number" placeholder="Jumlah Stok 20">
+<button onclick="addStok()">SIMPAN KE SUPABASE (ONLINE)</button>
+</div>
+
+<div class="card">
+<h4>💸 Jual / Tarik Tunai / Transfer</h4>
+<select id="prod"></select>
+<div class="row"><input id="jual" type="number" placeholder="Harga jual (kosong = harga default)"><select id="jenis"><option value="jual_voucher">Jual Voucher</option><option value="tarik_tunai">Tarik Tunai (Fee 5k)</option><option value="transfer">Transfer (Fee 5k)</option></select></div>
+<button onclick="jual()">JUAL SEKARANG - ONLINE</button>
+</div>
+
+<div id="list"></div>
+</div>
+
 <script>
-const KEY='konterku_v1';
-let data=JSON.parse(localStorage.getItem(KEY)||'null')||{modal:0,cash:0,accounts:[],stock:[],sales:[],expenses:[],history:[]};
-let page='dashboard';
-const rupiah=n=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(n||0);
-const save=()=>localStorage.setItem(KEY,JSON.stringify(data));
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const totalSaldo=()=>data.cash+data.accounts.reduce((a,b)=>a+Number(b.balance||0),0);
-const totalStock=()=>data.stock.reduce((a,b)=>a+Number(b.qty||0)*Number(b.buy||0),0);
-const totalSales=()=>data.sales.reduce((a,b)=>a+Number(b.total||0),0);
-const totalExpense=()=>data.expenses.reduce((a,b)=>a+Number(b.amount||0),0);
-const profit=()=>data.sales.reduce((a,b)=>a+Number(b.profit||0),0)-totalExpense();
-function nav(){let items=[['dashboard','Ringkasan'],['saldo','Saldo'],['stock','Stok'],['sales','Penjualan'],['expense','Pengeluaran']];document.getElementById('tabs').innerHTML=items.map(x=>`<button class="tab ${page===x[0]?'active':''}" onclick="page='${x[0]}';render()">${x[1]}</button>`).join('')}
-function render(){nav();let m=document.getElementById('main');if(page==='dashboard')dashboard(m);if(page==='saldo')saldo(m);if(page==='stock')stock(m);if(page==='sales')sales(m);if(page==='expense')expense(m)}
-function dashboard(m){m.innerHTML=`<div class="grid"><div class="card"><div class="label">Total saldo</div><div class="money blue">${rupiah(totalSaldo())}</div></div><div class="card"><div class="label">Nilai stok</div><div class="money">${rupiah(totalStock())}</div></div><div class="card"><div class="label">Penjualan</div><div class="money green">${rupiah(totalSales())}</div></div><div class="card"><div class="label">Laba bersih</div><div class="money ${profit()>=0?'green':'red'}">${rupiah(profit())}</div></div></div><div class="section card"><div class="row"><div><h2>Mulai dari sini</h2><div class="small">Masukkan modal awal dan saldo bank/e-wallet dulu.</div></div><div class="actions"><button class="primary" onclick="openModal('modal')">+ Modal</button><button onclick="openModal('account')">+ Saldo</button></div></div></div><div class="section card"><div class="row"><h2>Transaksi terbaru</h2><button onclick="page='sales';render()">Lihat</button></div>${recent()}</div>`}
-function recent(){let arr=[...data.sales.map(x=>({...x,type:'Penjualan'})),...data.expenses.map(x=>({...x,type:'Pengeluaran'}))].sort((a,b)=>b.time-a.time).slice(0,6);return arr.length?`<table><tr><th>Tanggal</th><th>Jenis</th><th>Keterangan</th><th>Nominal</th></tr>${arr.map(x=>`<tr><td>${new Date(x.time).toLocaleString('id-ID')}</td><td>${x.type}</td><td>${esc(x.note||x.name)}</td><td class="${x.type==='Penjualan'?'green':'red'}">${rupiah(x.total||x.amount)}</td></tr>`).join('')}</table>`:'<div class="empty">Belum ada transaksi.</div>'}
-function saldo(m){m.innerHTML=`<div class="card"><div class="row"><div><h2>Saldo & Modal</h2><div class="small">Pisahkan uang kas dengan bank/e-wallet.</div></div><div class="actions"><button class="primary" onclick="openModal('modal')">+ Modal awal</button><button onclick="openModal('account')">+ Bank/E-wallet</button></div></div><div class="section grid"><div class="card"><div class="label">Kas konter</div><div class="money">${rupiah(data.cash)}</div></div>${data.accounts.map(a=>`<div class="card"><div class="label">${esc(a.name)}</div><div class="money">${rupiah(a.balance)}</div></div>`).join('')}</div></div>`}
-function stock(m){m.innerHTML=`<div class="card"><div class="row"><div><h2>Stok Barang</h2><div class="small">Contoh: pulsa tidak perlu stok; voucher, kartu perdana, aksesoris bisa dicatat.</div></div><button class="primary" onclick="openModal('stock')">+ Barang</button></div>${data.stock.length?`<table><tr><th>Barang</th><th>Stok</th><th>Harga modal</th><th>Harga jual</th><th></th></tr>${data.stock.map((x,i)=>`<tr><td>${esc(x.name)}</td><td class="${x.qty<=x.min?'stock-low':'stock-ok'}">${x.qty}</td><td>${rupiah(x.buy)}</td><td>${rupiah(x.sell)}</td><td><button class="danger" onclick="delStock(${i})">Hapus</button></td></tr>`).join('')}</table>`:'<div class="empty">Belum ada barang.</div>'}</div>`}
-function sales(m){m.innerHTML=`<div class="card"><div class="row"><div><h2>Penjualan</h2><div class="small">Catat penjualan untuk menghitung omzet dan laba.</div></div><button class="primary" onclick="openModal('sale')">+ Penjualan</button></div>${data.sales.length?`<table><tr><th>Tanggal</th><th>Item</th><th>Total</th><th>Laba</th></tr>${data.sales.slice().reverse().map(x=>`<tr><td>${new Date(x.time).toLocaleString('id-ID')}</td><td>${esc(x.name)}</td><td>${rupiah(x.total)}</td><td class="green">${rupiah(x.profit)}</td></tr>`).join('')}</table>`:'<div class="empty">Belum ada penjualan.</div>'}</div>`}
-function expense(m){m.innerHTML=`<div class="card"><div class="row"><div><h2>Pengeluaran</h2><div class="small">Catat biaya listrik, makan, sewa, belanja, dll.</div></div><button class="primary" onclick="openModal('expense')">+ Pengeluaran</button></div>${data.expenses.length?`<table><tr><th>Tanggal</th><th>Keterangan</th><th>Nominal</th></tr>${data.expenses.slice().reverse().map(x=>`<tr><td>${new Date(x.time).toLocaleString('id-ID')}</td><td>${esc(x.note)}</td><td class="red">${rupiah(x.amount)}</td></tr>`).join('')}</table>`:'<div class="empty">Belum ada pengeluaran.</div>'}</div>`}
-function openModal(type){document.getElementById('modal').classList.add('show');let t=document.getElementById('modalTitle'),b=document.getElementById('modalBody');let forms={modal:["Modal awal",`<form onsubmit="addModal(event)"><label>Nominal<input id="famount" type="number" min="0" required></label><label>Masuk ke<select id="ftarget"><option value="cash">Kas konter</option>${data.accounts.map((a,i)=>`<option value="a${i}">${esc(a.name)}</option>`).join('')}</select></label><button class="primary">Simpan</button></form>`],account:["Tambah saldo bank/e-wallet",`<form onsubmit="addAccount(event)"><label>Nama<input id="fname" placeholder="BCA / DANA / OVO" required></label><label>Saldo awal<input id="famount" type="number" min="0" required></label><button class="primary">Simpan</button></form>`],stock:["Tambah barang",`<form onsubmit="addStock(event)"><label>Nama barang<input id="fname" required></label><div class="formgrid"><label>Stok awal<input id="fqty" type="number" min="0" required></label><label>Minimum stok<input id="fmin" type="number" min="0" value="2"></label><label>Harga modal<input id="fbuy" type="number" min="0" required></label><label>Harga jual<input id="fsell" type="number" min="0" required></label></div><button class="primary">Simpan</button></form>`],sale:["Catat penjualan",`<form onsubmit="addSale(event)"><label>Nama/produk<input id="fname" placeholder="Pulsa 10K / Charger" required></label><div class="formgrid"><label>Modal<input id="fbuy" type="number" min="0" required></label><label>Harga jual<input id="fsell" type="number" min="0" required></label></div><button class="primary">Simpan</button></form>`],expense:["Catat pengeluaran",`<form onsubmit="addExpense(event)"><label>Keterangan<input id="fname" placeholder="Listrik" required></label><label>Nominal<input id="famount" type="number" min="0" required></label><button class="primary">Simpan</button></form>`]};[t.innerText,b.innerHTML]=forms[type]}
-function closeModal(){document.getElementById('modal').classList.remove('show')}
-function addModal(e){e.preventDefault();let n=+famount.value;if(ftarget.value==='cash')data.cash+=n;else data.accounts[+ftarget.value.slice(1)].balance+=n;save();closeModal();render()}
-function addAccount(e){e.preventDefault();data.accounts.push({name:fname.value,balance:+famount.value});save();closeModal();render()}
-function addStock(e){e.preventDefault();data.stock.push({name:fname.value,qty:+fqty.value,min:+fmin.value,buy:+fbuy.value,sell:+fsell.value});save();closeModal();render()}
-function addSale(e){e.preventDefault();let buy=+fbuy.value,sell=+fsell.value;data.sales.push({name:fname.value,total:sell,profit:sell-buy,time:Date.now()});data.cash+=sell;save();closeModal();render()}
-function addExpense(e){e.preventDefault();let n=+famount.value;data.expenses.push({note:fname.value,amount:n,time:Date.now()});data.cash-=n;save();closeModal();render()}
-function delStock(i){if(confirm('Hapus barang ini?')){data.stock.splice(i,1);save();render()}}
-function resetData(){if(confirm('Reset semua data demo?')){localStorage.removeItem(KEY);location.reload()}}
-function login(e){e.preventDefault();if(document.getElementById('loginPass').value==='konter01'){sessionStorage.setItem('konterku_auth','1');document.getElementById('login').style.display='none';document.getElementById('app').style.display='block';render()}else{document.getElementById('loginError').textContent='Password salah.'}}
-if(sessionStorage.getItem('konterku_auth')==='1'){document.getElementById('login').style.display='none';document.getElementById('app').style.display='block';render()}
+const SUPABASE_URL = "https://jmmukkudahfilkbllirue.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptdWtrdWRhZmhpbGtibGxpcnVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1Mzg3NDUsImV4cCI6MjEwNjExNDc0NX0.BqxV1PS2Ypt5MSh5ItVDndOD05lrZdq_wFC9w1hDqXY";
+const supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+async function loadAll(){
+  let {data:stok, error:e1} = await supa.from('stok').select('*').order('id',{ascending:false});
+  let {data:trans, error:e2} = await supa.from('transaksi').select('*');
+  if(e1 || e2){
+    document.getElementById('status').innerText = "❌ ERROR RLS: "+(e1?.message||e2?.message);
+    document.getElementById('status').style.background="yellow";
+    return;
+  }
+  let tm=0,tj=0,tu=0; trans?.forEach(t=>{tm+=t.modal||0; tj+=t.jual||0; tu+=t.untung||0});
+  document.getElementById('tm').innerText='Rp '+tm.toLocaleString('id-ID');
+  document.getElementById('tj').innerText='Rp '+tj.toLocaleString('id-ID');
+  document.getElementById('tu').innerText='Rp '+tu.toLocaleString('id-ID');
+  document.getElementById('count').innerText= (stok?.length||0)+' Produk - ONLINE';
+  document.getElementById('status').innerText='● ONLINE REALTIME - Sinkron Semua HP';
+  
+  let list=document.getElementById('list'), sel=document.getElementById('prod');
+  list.innerHTML=''; sel.innerHTML='';
+  stok?.forEach(s=>{
+    sel.innerHTML+=`<option value="${s.id}">${s.nama} - Sisa:${s.sisa} (Jual ${s.jual})</option>`;
+    list.innerHTML+=`<div class="card"><b>${s.nama}</b> - Sisa <b>${s.sisa}</b><br><small>Modal Rp ${s.modal?.toLocaleString()} | Jual Rp ${s.jual?.toLocaleString()}</small></div>`;
+  });
+}
+async function addStok(){
+  if(!nama.value) return alert('Isi nama');
+  await supa.from('stok').insert({nama:nama.value,modal:+modal.value||0,jual:+hjual.value||0,sisa:+stok.value||0});
+  nama.value=modal.value=hjual.value=stok.value=''; loadAll();
+}
+async function jual(){
+  let id=prod.value; let {data:s} = await supa.from('stok').select('*').eq('id',id).single();
+  if(!s) return alert('Pilih produk');
+  if(s.sisa<=0 && jenis.value=='jual_voucher') return alert('Stok habis');
+  let hj = +jual.value || s.jual;
+  if(jenis.value!='jual_voucher') hj = hj || 5000;
+  let unt = jenis.value=='jual_voucher' ? (hj-s.modal) : hj;
+  await supa.from('transaksi').insert({jenis:jenis.value,nama_barang:s.nama,modal: jenis.value=='jual_voucher'?s.modal:0,jual:hj,untung:unt});
+  if(jenis.value=='jual_voucher') await supa.from('stok').update({sisa:s.sisa-1}).eq('id',id);
+  jual.value=''; loadAll();
+}
+loadAll();
+supa.channel('rrq-online').on('postgres_changes',{event:'*',schema:'public',table:'stok'},loadAll).on('postgres_changes',{event:'*',schema:'public',table:'transaksi'},loadAll).subscribe();
 </script></body></html>
