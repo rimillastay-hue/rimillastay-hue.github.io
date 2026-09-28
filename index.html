@@ -1,92 +1,27 @@
 <!DOCTYPE html>
-<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RRQ CELLULAR ONLINE</title>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Konterku</title>
+<script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,system-ui}
-body{background:#f6f7fb}
-.head{background:#c70000;color:#fff;padding:18px;text-align:center;position:sticky;top:0}
-.card{background:#fff;margin:10px;padding:14px;border-radius:14px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
-.row{display:flex;gap:8px}
-.stat{flex:1;background:#fff;border:1px solid #ffd6d6;border-radius:12px;padding:12px;text-align:center}
-.stat b{font-size:18px}
-input,select,button{width:100%;padding:12px;margin:6px 0;border-radius:10px;border:1px solid #ddd;font-size:15px}
-button{background:#c70000;color:#fff;font-weight:800;border:none}
-.badge{background:#ffe5e5;color:#c70000;padding:4px 8px;border-radius:20px;font-size:11px;font-weight:800}
-</style></head><body>
-<div class="head">
-<h2>RRQ CELLULAR - ONLINE</h2>
-<small id="status">● Menghubungkan...</small>
-<div style="margin-top:8px"><span class="badge" id="count">0 Produk</span></div>
+</head><body class="bg-gray-50 p-4"><div class="max-w-md mx-auto">
+<div class="bg-white rounded-2xl shadow p-4 mb-4 flex justify-between">
+<b>RIMILLA STAY</b><span id="status" class="text-xs bg-yellow-100 px-3 py-1 rounded-full">Menghubungkan...</span>
 </div>
-<div style="padding:8px">
-<div class="row">
-<div class="stat">Modal Keluar<br><b id="tm">Rp 0</b></div>
-<div class="stat">Total Jual<br><b id="tj">Rp 0</b></div>
-<div class="stat">Untung Bersih<br><b id="tu" style="color:#c70000">Rp 0</b></div>
+<div class="bg-white rounded-2xl shadow p-4 mb-4">
+<input id="nama" placeholder="Nama barang" class="w-full border rounded p-2 mb-2">
+<div class="grid grid-cols-3 gap-2 mb-3">
+<input id="modal" type="number" placeholder="Modal" class="border rounded p-2">
+<input id="jual" type="number" placeholder="Jual" class="border rounded p-2">
+<input id="sisa" type="number" placeholder="Jml" class="border rounded p-2">
 </div>
-
-<div class="card">
-<h4>➕ Tambah Stok Baru (Sinkron Semua HP)</h4>
-<input id="nama" placeholder="Nama: V.Tsel 7/5">
-<div class="row"><input id="modal" type="number" placeholder="Modal 15300"><input id="hjual" type="number" placeholder="Jual 17000"></div>
-<input id="stok" type="number" placeholder="Jumlah Stok 20">
-<button onclick="addStok()">SIMPAN KE SUPABASE (ONLINE)</button>
+<button onclick="tambahStok()" class="w-full bg-violet-600 text-white rounded-xl py-3 font-bold">SIMPAN KE SUPABASE (ONLINE)</button>
 </div>
-
-<div class="card">
-<h4>💸 Jual / Tarik Tunai / Transfer</h4>
-<select id="prod"></select>
-<div class="row"><input id="jual" type="number" placeholder="Harga jual (kosong = harga default)"><select id="jenis"><option value="jual_voucher">Jual Voucher</option><option value="tarik_tunai">Tarik Tunai (Fee 5k)</option><option value="transfer">Transfer (Fee 5k)</option></select></div>
-<button onclick="jual()">JUAL SEKARANG - ONLINE</button>
+<div class="bg-white rounded-2xl shadow p-4"><div id="listStok">Loading...</div></div>
 </div>
-
-<div id="list"></div>
-</div>
-
 <script>
-const SUPABASE_URL = "https://jmmukkudahfilkbllirue.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptdWtrdWRhZmhpbGtibGxpcnVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1Mzg3NDUsImV4cCI6MjEwNjExNDc0NX0.BqxV1PS2Ypt5MSh5ItVDndOD05lrZdq_wFC9w1hDqXY";
-const supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-async function loadAll(){
-  let {data:stok, error:e1} = await supa.from('stok').select('*').order('id',{ascending:false});
-  let {data:trans, error:e2} = await supa.from('transaksi').select('*');
-  if(e1 || e2){
-    document.getElementById('status').innerText = "❌ ERROR RLS: "+(e1?.message||e2?.message);
-    document.getElementById('status').style.background="yellow";
-    return;
-  }
-  let tm=0,tj=0,tu=0; trans?.forEach(t=>{tm+=t.modal||0; tj+=t.jual||0; tu+=t.untung||0});
-  document.getElementById('tm').innerText='Rp '+tm.toLocaleString('id-ID');
-  document.getElementById('tj').innerText='Rp '+tj.toLocaleString('id-ID');
-  document.getElementById('tu').innerText='Rp '+tu.toLocaleString('id-ID');
-  document.getElementById('count').innerText= (stok?.length||0)+' Produk - ONLINE';
-  document.getElementById('status').innerText='● ONLINE REALTIME - Sinkron Semua HP';
-  
-  let list=document.getElementById('list'), sel=document.getElementById('prod');
-  list.innerHTML=''; sel.innerHTML='';
-  stok?.forEach(s=>{
-    sel.innerHTML+=`<option value="${s.id}">${s.nama} - Sisa:${s.sisa} (Jual ${s.jual})</option>`;
-    list.innerHTML+=`<div class="card"><b>${s.nama}</b> - Sisa <b>${s.sisa}</b><br><small>Modal Rp ${s.modal?.toLocaleString()} | Jual Rp ${s.jual?.toLocaleString()}</small></div>`;
-  });
-}
-async function addStok(){
-  if(!nama.value) return alert('Isi nama');
-  await supa.from('stok').insert({nama:nama.value,modal:+modal.value||0,jual:+hjual.value||0,sisa:+stok.value||0});
-  nama.value=modal.value=hjual.value=stok.value=''; loadAll();
-}
-async function jual(){
-  let id=prod.value; let {data:s} = await supa.from('stok').select('*').eq('id',id).single();
-  if(!s) return alert('Pilih produk');
-  if(s.sisa<=0 && jenis.value=='jual_voucher') return alert('Stok habis');
-  let hj = +jual.value || s.jual;
-  if(jenis.value!='jual_voucher') hj = hj || 5000;
-  let unt = jenis.value=='jual_voucher' ? (hj-s.modal) : hj;
-  await supa.from('transaksi').insert({jenis:jenis.value,nama_barang:s.nama,modal: jenis.value=='jual_voucher'?s.modal:0,jual:hj,untung:unt});
-  if(jenis.value=='jual_voucher') await supa.from('stok').update({sisa:s.sisa-1}).eq('id',id);
-  jual.value=''; loadAll();
-}
-loadAll();
-supa.channel('rrq-online').on('postgres_changes',{event:'*',schema:'public',table:'stok'},loadAll).on('postgres_changes',{event:'*',schema:'public',table:'transaksi'},loadAll).subscribe();
+const supabaseClient = supabase.createClient("https://jmukkudafhilkbllirue.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptdWtrdWRhZmhpbGtibGxpcnVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1Mzg3NDUsImV4cCI6MjEwNjExNDc0NX0.BqxV1PS2Ypt5MSh5ItVDndOD05lrZdq_wFC9w1hDqXY");
+async function init(){try{const {error}=await supabaseClient.from('stok').select('*').limit(1);if(error)throw error;document.getElementById('status').textContent='● ONLINE - Sinkron';document.getElementById('status').className='text-xs px-3 py-1 rounded-full bg-green-100 text-green-700 font-bold';loadStok();}catch(e){document.getElementById('status').textContent='OFFLINE: '+e.message}}
+async function loadStok(){const {data}=await supabaseClient.from('stok').select('*').order('id',{ascending:false});document.getElementById('listStok').innerHTML=data.map(s=>`<div class='border rounded p-2 mb-1'><b>${s.nama}</b> sisa ${s.sisa}</div>`).join('')}
+async function tambahStok(){const nama=document.getElementById('nama').value;const modal=parseInt(document.getElementById('modal').value);const jual=parseInt(document.getElementById('jual').value);const sisa=parseInt(document.getElementById('sisa').value);const {error}=await supabaseClient.from('stok').insert([{nama,modal,jual,sisa}]);if(error)alert(error.message);else loadStok()}
+init();
 </script></body></html>
