@@ -2,78 +2,58 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RRQ CELLULAR PRO</title>
+<title>RRQ CELLULAR</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
-<style>body{font-family:'Plus Jakarta Sans',sans-serif;background:#f8f9fb}</style>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+<style>body{font-family:'Plus Jakarta Sans',sans-serif} button{ -webkit-tap-highlight-color: transparent; } </style>
 </head>
-<body class="min-h-screen p-4">
+<body class="bg-[#f8f9fb] min-h-screen p-4">
 <div class="max-w-md mx-auto">
-
-<!-- HEADER PRO -->
 <div class="bg-black rounded-[24px] p-5 mb-4 text-white flex justify-between items-center">
-<div class="flex items-center gap-3">
-<div class="w-12 h-12 bg-[#FF0000] rounded-2xl flex items-center justify-center font-black text-xl">R</div>
-<div><h1 class="font-extrabold text-[16px]">RRQ CELLULAR</h1><p class="text-[11px] text-zinc-400">Pekanbaru • Buka Setiap Hari</p></div>
+<div class="flex items-center gap-3"><div class="w-12 h-12 bg-red-600 rounded-2xl flex items-center justify-center font-black text-xl">R</div><div><h1 class="font-extrabold">RRQ CELLULAR</h1><p class="text-[11px] text-zinc-400">Klik tombol di bawah untuk ganti</p></div></div>
+<div class="bg-white/20 px-3 py-1 rounded-full text-[10px] font-bold">ONLINE</div>
 </div>
-<div class="bg-white/10 px-3 py-1.5 rounded-full text-[11px] font-bold">● ONLINE</div>
-</div>
-
-<!-- STAT UNTUNG -->
 <div class="grid grid-cols-2 gap-3 mb-4">
-<div class="bg-white rounded-[20px] p-4 border shadow-sm"><p class="text-[11px] text-gray-400 font-bold">TOTAL UNTUNG</p><h2 id="totalUntung" class="font-black text-[20px] text-green-600">Rp 0</h2><p class="text-[10px] text-gray-400">Hari ini</p></div>
-<div class="bg-white rounded-[20px] p-4 border shadow-sm"><p class="text-[11px] text-gray-400 font-bold">TRANSAKSI</p><h2 id="totalTrx" class="font-black text-[20px]">0</h2><p class="text-[10px] text-gray-400">Kali jual</p></div>
+<div class="bg-white rounded-[20px] p-4 border"><p class="text-[11px] text-gray-400 font-bold">TOTAL UNTUNG</p><h2 id="totalUntung" class="font-black text-[20px] text-green-600">Rp 0</h2></div>
+<div class="bg-white rounded-[20px] p-4 border"><p class="text-[11px] text-gray-400 font-bold">TRANSAKSI</p><h2 id="totalTrx" class="font-black text-[20px]">0</h2></div>
 </div>
-
-<!-- TAB -->
 <div class="bg-white rounded-[16px] p-1.5 mb-4 border flex gap-1.5">
-<button onclick="tab('layanan')" id="tab-layanan" class="flex-1 bg-black text-white rounded-[12px] py-3 text-[12px] font-bold">💼 LAYANAN DIGITAL</button>
-<button onclick="tab('produk')" id="tab-produk" class="flex-1 bg-gray-100 text-gray-500 rounded-[12px] py-3 text-[12px] font-bold">📦 TOKO FISIK</button>
+<button type="button" onclick="tab('layanan')" id="tab-layanan" class="flex-1 bg-black text-white rounded-[12px] py-3 text-[12px] font-bold">LAYANAN</button>
+<button type="button" onclick="tab('produk')" id="tab-produk" class="flex-1 bg-gray-100 rounded-[12px] py-3 text-[12px] font-bold">TOKO FISIK</button>
 </div>
-
-<!-- LAYANAN -->
 <div id="view-layanan">
 <div class="grid grid-cols-3 gap-2.5 mb-4">
-<button onclick="setJenis('tarik')" id="b-tarik" class="layanan-btn bg-black text-white rounded-[18px] p-4 text-[11px] font-bold shadow"><div class="text-[20px] mb-1">💸</div>TARIK TUNAI</button>
-<button onclick="setJenis('token')" id="b-token" class="layanan-btn bg-white border rounded-[18px] p-4 text-[11px] font-bold"><div class="text-[20px] mb-1">⚡</div>TOKEN</button>
-<button onclick="setJenis('ewallet')" id="b-ewallet" class="layanan-btn bg-white border rounded-[18px] p-4 text-[11px] font-bold"><div class="text-[20px] mb-1">👛</div>E-WALLET</button>
-<button onclick="setJenis('pulsa')" id="b-pulsa" class="layanan-btn bg-white border rounded-[18px] p-4 text-[11px] font-bold"><div class="text-[20px] mb-1">📱</div>PULSA</button>
-<button onclick="setJenis('transfer')" id="b-transfer" class="layanan-btn bg-white border rounded-[18px] p-4 text-[11px] font-bold"><div class="text-[20px] mb-1">🏦</div>TRANSFER</button>
-<button onclick="setJenis('v_tembak')" id="b-v_tembak" class="layanan-btn bg-white border rounded-[18px] p-4 text-[11px] font-bold ring-2 ring-red-500"><div class="text-[20px] mb-1">🔫</div>V.TEMBAK</button>
+<button type="button" onclick="setJenis('tarik')" id="b-tarik" class="bg-black text-white rounded-[18px] p-4 text-[11px] font-bold border-2 border-black">💸<br>TARIK TUNAI</button>
+<button type="button" onclick="setJenis('token')" id="b-token" class="bg-white text-black rounded-[18px] p-4 text-[11px] font-bold border-2 border-gray-100">⚡<br>TOKEN</button>
+<button type="button" onclick="setJenis('ewallet')" id="b-ewallet" class="bg-white text-black rounded-[18px] p-4 text-[11px] font-bold border-2 border-gray-100">👛<br>E-WALLET</button>
+<button type="button" onclick="setJenis('pulsa')" id="b-pulsa" class="bg-white text-black rounded-[18px] p-4 text-[11px] font-bold border-2 border-gray-100">📱<br>PULSA</button>
+<button type="button" onclick="setJenis('transfer')" id="b-transfer" class="bg-white text-black rounded-[18px] p-4 text-[11px] font-bold border-2 border-gray-100">🏦<br>TRANSFER</button>
+<button type="button" onclick="setJenis('v_tembak')" id="b-v_tembak" class="bg-white text-black rounded-[18px] p-4 text-[11px] font-bold border-2 border-gray-100">🔫<br>V.TEMBAK</button>
 </div>
-
-<div class="bg-white rounded-[24px] p-5 border shadow-sm">
+<div class="bg-white rounded-[24px] p-5 border">
 <h2 id="judulForm" class="font-extrabold text-[14px] mb-4">💸 Tarik Tunai</h2>
-<label class="text-[11px] font-bold text-gray-500">NOMOR TUJUAN</label>
-<input id="nomor" placeholder="08xx / No Meter / No Rek" class="w-full bg-[#f6f7f9] border-0 rounded-[14px] p-4 mb-3 text-sm outline-none focus:ring-2 focus:ring-black">
-<label class="text-[11px] font-bold text-gray-500">PAKET / OPERATOR</label>
-<select id="operator" class="w-full bg-[#f6f7f9] border-0 rounded-[14px] p-4 mb-3 text-sm hidden"></select>
+<input id="nomor" placeholder="08xx / No Meter / No Rek" class="w-full bg-[#f6f7f9] border rounded-[14px] p-4 mb-3 text-sm">
+<select id="operator" class="w-full bg-[#f6f7f9] border rounded-[14px] p-4 mb-3 text-sm hidden"></select>
 <div class="grid grid-cols-2 gap-3 mb-4">
-<div><label class="text-[11px] font-bold text-gray-500">MODAL</label><input id="nominal" type="number" placeholder="0" class="w-full bg-[#f6f7f9] border-0 rounded-[14px] p-4 text-sm"></div>
-<div><label class="text-[11px] font-bold text-gray-500">UNTUNG</label><input id="admin" type="number" placeholder="0" class="w-full bg-red-50 border-0 rounded-[14px] p-4 text-sm font-bold text-red-600"></div>
+<div><p class="text-[11px] font-bold mb-1">MODAL</p><input id="nominal" type="number" placeholder="0" class="w-full bg-[#f6f7f9] border rounded-[14px] p-4 text-sm"></div>
+<div><p class="text-[11px] font-bold mb-1">UNTUNG</p><input id="admin" type="number" placeholder="0" class="w-full bg-red-50 border border-red-100 rounded-[14px] p-4 text-sm font-bold"></div>
 </div>
-<button onclick="simpanLayanan()" class="w-full bg-[#FF0000] active:bg-red-700 text-white rounded-[14px] py-4 font-black text-[13px] shadow-lg shadow-red-200">SIMPAN & CATAT UNTUNG →</button>
+<button type="button" onclick="simpanLayanan()" class="w-full bg-red-600 text-white rounded-[14px] py-4 font-black text-[13px]">SIMPAN & CATAT UNTUNG →</button>
 </div>
 </div>
-
-<!-- PRODUK FISIK -->
 <div id="view-produk" class="hidden">
-<div class="bg-white rounded-[24px] p-5 border shadow-sm mb-4">
-<h2 class="font-bold text-[13px] mb-3">Tambah Barang Fisik</h2>
-<input id="nama" placeholder="Contoh: Perdana Telkomsel 10GB, Voucher Fisik, Casing" class="w-full bg-[#f6f7f9] border-0 rounded-[14px] p-4 mb-3 text-sm">
-<div class="grid grid-cols-3 gap-2 mb-3">
-<input id="modal" type="number" placeholder="Modal" class="bg-[#f6f7f9] rounded-[12px] p-3 text-sm">
-<input id="jual" type="number" placeholder="Jual" class="bg-[#f6f7f9] rounded-[12px] p-3 text-sm">
-<input id="sisa" type="number" placeholder="Stok" class="bg-[#f6f7f9] rounded-[12px] p-3 text-sm">
+<div class="bg-white rounded-[24px] p-5 border mb-4">
+<h2 class="font-bold text-[13px] mb-3">Tambah Stok Fisik</h2>
+<input id="nama" placeholder="Perdana, Voucher Fisik, Casing" class="w-full bg-[#f6f7f9] border rounded-[14px] p-4 mb-3 text-sm">
+<div class="grid grid-cols-3 gap-2 mb-3"><input id="modal" type="number" placeholder="Modal" class="bg-[#f6f7f9] rounded-[12px] p-3 text-sm"><input id="jual" type="number" placeholder="Jual" class="bg-[#f6f7f9] rounded-[12px] p-3 text-sm"><input id="sisa" type="number" placeholder="Stok" class="bg-[#f6f7f9] rounded-[12px] p-3 text-sm"></div>
+<button type="button" onclick="tambahStok()" class="w-full bg-black text-white rounded-[14px] py-4 font-bold text-[13px]">+ TAMBAH STOK</button>
 </div>
-<button onclick="tambahStok()" class="w-full bg-black text-white rounded-[14px] py-4 font-bold text-[13px]">+ TAMBAH KE STOK</button>
+<div class="bg-white rounded-[24px] p-5 border"><div class="flex justify-between mb-3"><h2 class="font-bold text-[13px]">Stok</h2><span id="jmlStok" class="text-[11px] bg-black text-white px-2.5 py-1 rounded-full">0</span></div><div id="listStok"></div><div class="flex gap-2 mt-3"><select id="pilihBarang" class="flex-1 bg-[#f6f7f9] rounded-[12px] p-3 text-sm"></select><button type="button" onclick="jualStok()" class="bg-green-600 text-white rounded-[12px] px-6 font-bold text-[12px]">JUAL</button></div></div>
 </div>
-<div class="bg-white rounded-[24px] p-5 border shadow-sm">
-<div class="flex justify-between mb-3"><h2 class="font-bold text-[13px]">Stok Toko</h2><span id="jmlStok" class="text-[11px] bg-black text-white px-2.5 py-1 rounded-full">0</span></div>
-<div id="listStok" class="mb-4"></div>
-<div class="flex gap-2"><select id="pilihBarang" class="flex-1 bg-[#f6f7f9] rounded-[12px] p-3 text-sm"></select><button onclick="jualStok()" class="bg-green-600 text-white rounded-[12px] px-6 font-bold text-[12px]">JUAL</button></div>
+<div class="bg-white rounded-[24px] p-5 border mt-4"><h2 class="font-bold text-[13px] mb-4">📋 Riwayat Hari Ini</h2><div id="listTransaksi"></div></div>
 </div>
-</div>
-
-<!-- RIWAY
+<script>
+const supabaseClient=supabase.createClient("https://jmukkudafhilkbllirue.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptdWtrdWRhZmhpbGtibGxpcnVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1Mzg3NDUsImV4cCI6MjEwNjExNDc0NX0.BqxV1PS2Ypt5MSh5ItVDndOD05lrZdq_wFC9w1hDqXY");
+let jenis='tarik';
+function tab(t){document.getElementById('view-layanan').classList.toggle('hidden',t!='layanan');document.getElementById('view-produk').classList.toggle('hidden',t!='produk');document.getElementById('tab-layanan').className=t=='layanan'?'flex-1 bg-black text-white rounded-[12px] py-3 text-[12px] font-bold':'flex-1 bg-gray-100
