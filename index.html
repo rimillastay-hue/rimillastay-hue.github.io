@@ -1,69 +1,101 @@
 <!DOCTYPE html>
 <html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RRQ CELLULAR</title><script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
-</head><body class="bg-[#f0f0f0] max-w-md mx-auto min-h-screen p-3 font-sans">
+<title>RRQ CELLULAR PRO</title><script src="https://cdn.tailwindcss.com"></script></head>
+<body class="bg-[#f2f2f2] max-w-md mx-auto p-3 font-sans pb-20">
 
-<!-- HEADER SIMPEL RRQ -->
-<div class="bg-white p-4 rounded-2xl flex justify-between border">
-<b>RRQ CELLULAR</b><span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-[10px]">Zulbakri</span>
+<div class="bg-white p-4 rounded-2xl border flex justify-between items-center">
+<div><b>RRQ CELLULAR PRO</b><div class="text-[10px] text-gray-400">Rumus Otomatis - Berbayar</div></div>
+<b class="text-[11px]" id="tgl"></b>
 </div>
 
-<!-- MENU INPUT SIMPEL -->
+<!-- INPUT TRANSAKSI -->
 <div class="bg-white p-4 rounded-2xl border mt-3">
-<div class="grid grid-cols-4 gap-2 mb-3 text-[10px] font-bold">
-<button onclick="setJ('PENJUALAN')" id="b-PENJUALAN" class="bg-black text-white p-3 rounded-xl">PENJUALAN</button>
-<button onclick="setJ('NONBARANG')" id="b-NONBARANG" class="bg-gray-100 p-3 rounded-xl">NON BARANG</button>
-<button onclick="setJ('TARIK')" id="b-TARIK" class="bg-gray-100 p-3 rounded-xl">TARIK</button>
-<button onclick="setJ('SETORAN')" id="b-SETORAN" class="bg-gray-100 p-3 rounded-xl">SETORAN</button>
+<b class="text-[11px]">INPUT TRANSAKSI</b>
+<div class="grid grid-cols-3 gap-2 mt-3 mb-3">
+<button onclick="setJ('PENJUALAN')" id="b-PENJUALAN" class="bg-black text-white p-3 rounded-xl text-[10px] font-bold">PENJUALAN BARANG / V.TEMBAK</button>
+<button onclick="setJ('NONBARANG')" id="b-NONBARANG" class="bg-gray-100 p-3 rounded-xl text-[10px] font-bold">NON BARANG</button>
+<button onclick="setJ('TARIK')" id="b-TARIK" class="bg-gray-100 p-3 rounded-xl text-[10px] font-bold">TARIK TUNAI</button>
+</div>
+<div id="brandBox" class="grid grid-cols-4 gap-2 mb-3"></div>
+<input id="ket" placeholder="Nama: AXIS 5GB / No Rek" class="w-full bg-gray-100 p-3 rounded-xl mb-2 text-[12px]">
+<div class="grid grid-cols-2 gap-2 mb-2">
+<input id="modal" type="number" placeholder="MODAL KELUAR (Rp)" class="bg-red-50 p-3 rounded-xl text-[12px] border border-red-200">
+<input id="jual" type="number" placeholder="UANG MASUK (Rp)" class="bg-green-50 p-3 rounded-xl text-[12px] border border-green-200">
+</div>
+<div class="text-[10px] text-gray-400 mb-2">Untung = Uang Masuk - Modal Keluar (otomatis)</div>
+<button onclick="add()" class="w-full bg-red-600 text-white p-3 rounded-xl font-bold">SIMPAN - RUMUS LANGSUNG JALAN</button>
 </div>
 
-<div class="grid grid-cols-4 gap-2 mb-3 text-[10px] font-bold" id="brandBox"></div>
-
-<input id="ket" placeholder="Keterangan / No HP" class="w-full bg-gray-100 p-3 rounded-xl mb-2 text-[12px]">
-<input id="mod" type="number" placeholder="Modal" class="w-full bg-gray-100 p-3 rounded-xl mb-2 text-[12px]">
-<input id="unt" type="number" placeholder="Untung / Admin" class="w-full bg-green-50 border border-green-200 p-3 rounded-xl mb-3 text-[12px] font-bold">
-<button onclick="simpan()" class="w-full bg-red-600 text-white p-3 rounded-xl font-bold">SIMPAN</button>
-</div>
-
-<!-- KAS AWAL - BISA BANYAK BANK & EWALLET - SIMPLE BISA DIPENCET -->
+<!-- UANG STANBY - RUMUS OTOMATIS -->
 <div class="bg-white p-4 rounded-2xl border mt-3">
-<b class="text-[12px]">UANG STANBY (SALDO AWAL)</b>
+<b class="text-[11px]">UANG STANBY (SALDO AWAL) - KETIK LANGSUNG NGITUNG</b>
 <div class="grid grid-cols-2 gap-2 mt-3">
-<input id="kKes" type="number" placeholder="KES LACI" class="bg-gray-100 p-2 rounded-lg text-[11px]">
-<input id="kBCA" type="number" placeholder="BCA" class="bg-blue-50 p-2 rounded-lg text-[11px]">
-<input id="kBRI" type="number" placeholder="BRI" class="bg-blue-50 p-2 rounded-lg text-[11px]">
-<input id="kMandiri" type="number" placeholder="MANDIRI" class="bg-blue-50 p-2 rounded-lg text-[11px]">
-<input id="kDANA" type="number" placeholder="DANA" class="bg-purple-50 p-2 rounded-lg text-[11px]">
-<input id="kOVO" type="number" placeholder="OVO" class="bg-purple-50 p-2 rounded-lg text-[11px]">
-<input id="kGOPAY" type="number" placeholder="GOPAY" class="bg-purple-50 p-2 rounded-lg text-[11px]">
-<input id="kSPAY" type="number" placeholder="SPAY" class="bg-purple-50 p-2 rounded-lg text-[11px]">
+<div class="text-[10px]">KES LACI<input id="s_kes" type="number" class="w-full bg-gray-100 p-2 rounded-lg mt-1 text-[12px]" oninput="hitung()" placeholder="0"></div>
+<div class="text-[10px]">BCA<input id="s_bca" type="number" class="w-full bg-blue-50 p-2 rounded-lg mt-1 text-[12px]" oninput="hitung()" placeholder="0"></div>
+<div class="text-[10px]">BRI<input id="s_bri" type="number" class="w-full bg-blue-50 p-2 rounded-lg mt-1 text-[12px]" oninput="hitung()" placeholder="0"></div>
+<div class="text-[10px]">MANDIRI<input id="s_mandiri" type="number" class="w-full bg-blue-50 p-2 rounded-lg mt-1 text-[12px]" oninput="hitung()" placeholder="0"></div>
+<div class="text-[10px]">BNI<input id="s_bni" type="number" class="w-full bg-blue-50 p-2 rounded-lg mt-1 text-[12px]" oninput="hitung()" placeholder="0"></div>
+<div class="text-[10px]">BSI<input id="s_bsi" type="number" class="w-full bg-blue-50 p-2 rounded-lg mt-1 text-[12px]" oninput="hitung()" placeholder="0"></div>
+<div class="text-[10px]">DANA<input id="s_dana" type="number" class="w-full bg-purple-50 p-2 rounded-lg mt-1 text-[12px]" oninput="hitung()" placeholder="0"></div>
+<div class="text-[10px]">OVO<input id="s_ovo" type="number" class="w-full bg-purple-50 p-2 rounded-lg mt-1 text-[12px]" oninput="hitung()" placeholder="0"></div>
+<div class="text-[10px]">GOPAY<input id="s_gopay" type="number" class="w-full bg-purple-50 p-2 rounded-lg mt-1 text-[12px]" oninput="hitung()" placeholder="0"></div>
+<div class="text-[10px]">SHOPEEPAY<input id="s_spay" type="number" class="w-full bg-purple-50 p-2 rounded-lg mt-1 text-[12px]" oninput="hitung()" placeholder="0"></div>
+<div class="text-[10px]">LINKAJA<input id="s_link" type="number" class="w-full bg-purple-50 p-2 rounded-lg mt-1 text-[12px]" oninput="hitung()" placeholder="0"></div>
+<div class="text-[10px]">APLIKASI<input id="s_app" type="number" class="w-full bg-orange-50 p-2 rounded-lg mt-1 text-[12px]" oninput="hitung()" placeholder="0"></div>
 </div>
-<button onclick="saveKas()" class="w-full bg-black text-white p-3 rounded-xl mt-3 text-[11px] font-bold">SIMPAN UANG STANBY</button>
+<div class="mt-3 p-2 bg-blue-50 rounded-xl flex justify-between"><span class="text-[11px]">TOTAL STANBY</span><b id="totalStanby" class="text-[11px]">Rp 0</b></div>
 </div>
 
-<!-- LAPORAN PERSIS FOTO - SEMUA BISA DIPENCET -->
+<!-- SETORAN -->
 <div class="bg-white p-4 rounded-2xl border mt-3">
-<div class="flex justify-between mb-3"><b class="text-[11px]" id="tgl">TRANSAKSI TGL</b><button onclick="load()" class="bg-green-600 text-white px-4 py-1 rounded text-[11px]">CARI</button></div>
+<b class="text-[11px]">UANG SETORAN (UANG DIAMBIL BOS)</b>
+<input id="s_setor" type="number" placeholder="0" class="w-full bg-orange-50 p-3 rounded-xl mt-2 text-[12px]" oninput="hitung()">
+</div>
 
-<details class="border rounded-lg mb-2"><summary class="p-3 font-bold text-[12px] cursor-pointer">+ TR PENJUALAN (Rp. <span id="vPenj">0</span>)</summary><div id="cPenj" class="p-3 bg-gray-50 text-[11px]"></div></details>
-<details class="border rounded-lg mb-2"><summary class="p-3 font-bold text-[12px] cursor-pointer">+ TR NON BARANG (Rp. <span id="vNon">0</span>)</summary><div id="cNon" class="p-3 bg-gray-50 text-[11px]"></div></details>
-<details class="border rounded-lg mb-2"><summary class="p-3 font-bold text-[12px] cursor-pointer">TR TARIK TUNAI (- Rp. <span id="vTarikM">0</span>), (+ Rp. <span id="vTarikP">0</span>)</summary><div id="cTarik" class="p-3 bg-gray-50 text-[11px]"></div></details>
-<details class="border rounded-lg mb-2"><summary class="p-3 font-bold text-[12px] cursor-pointer">+ UANG STANBY (Rp. <span id="vStanby">0</span>)</summary><div id="cStanby" class="p-3 bg-gray-50 text-[11px]"></div></details>
-<details class="border rounded-lg"><summary class="p-3 font-bold text-[12px] cursor-pointer">- UANG SETORAN (Rp. <span id="vSetor">0</span>)</summary><div id="cSetor" class="p-3 bg-gray-50 text-[11px]"></div></details>
+<!-- LAPORAN FINAL ADA RUMUS -->
+<div class="bg-white p-4 rounded-2xl border mt-3">
+<div class="font-bold text-[12px] mb-3">LAPORAN HARIAN - RUMUS OTOMATIS JALAN</div>
+<div class="space-y-2 text-[12px]">
+<div class="flex justify-between p-3 bg-gray-50 rounded-xl"><span>+ TR PENJUALAN (Voucher Tembak All Brand)</span><b id="vPenj">Rp 0</b></div>
+<div id="cPenj" class="text-[10px] px-2"></div>
+<div class="flex justify-between p-3 bg-gray-50 rounded-xl"><span>+ TR NON BARANG (Pulsa/Token/Wallet)</span><b id="vNon">Rp 0</b></div>
+<div id="cNon" class="text-[10px] px-2"></div>
+<div class="flex justify-between p-3 bg-red-50 rounded-xl"><span>- TR TARIK TUNAI (Modal Keluar)</span><b id="vTarikM">Rp 0</b></div>
+<div class="flex justify-between p-3 bg-green-50 rounded-xl"><span>+ TR TARIK TUNAI (Admin Masuk)</span><b id="vTarikP">Rp 0</b></div>
+<div id="cTarik" class="text-[10px] px-2"></div>
+<div class="flex justify-between p-3 bg-blue-50 rounded-xl"><span>+ UANG STANBY (Semua Bank & Ewallet)</span><b id="vStanby">Rp 0</b></div>
+<div id="cStanby" class="text-[10px] px-2"></div>
+<div class="flex justify-between p-3 bg-orange-50 rounded-xl"><span>- UANG SETORAN</span><b id="vSetor">Rp 0</b></div>
+</div>
 
-<div class="text-center mt-6"><div>TOTAL TR : <span id="totalTr">0</span></div><div>TOTAL UANG</div><b class="text-[24px]" id="totalUang">Rp. 0</b></div>
+<div class="bg-black text-white p-5 rounded-2xl mt-5 text-center">
+<div class="text-[10px] text-zinc-400">RUMUS FINAL:</div>
+<div class="text-[10px] mt-1 leading-relaxed">TOTAL UANG = (STANBY + PENJUALAN + NON BARANG + ADMIN TARIK) - (MODAL TARIK + SETORAN)</div>
+<div class="mt-4 text-[12px]">TOTAL TR: <span id="totalTr">0</span> Transaksi</div>
+<div class="text-[11px] text-zinc-400 mt-1">TOTAL UANG SAAT INI</div>
+<div class="text-[28px] font-black" id="totalUang">Rp 0</div>
+<div class="text-[10px] text-green-400 mt-2" id="totalUnt">Untung Hari Ini: Rp 0</div>
+</div>
 </div>
 
 <script>
-const sb=supabase.createClient("https://jmukkudafhilkbllirue.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptdWtrdWRhZmhpbGtibGxpcnVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1Mzg3NDUsImV4cCI6MjEwNjExNDc0NX0.BqxV1PS2Ypt5MSh5ItVDndOD05lrZdq_wFC9w1hDqXY");
 let jenis='PENJUALAN', brand='AXIS';
-let brands={PENJUALAN:['AXIS','XL','TSEL','ISAT','TRI','SF','BY.U','VOUCHER'], NONBARANG:['TOKEN','DANA','OVO','GOPAY','PULSA'], TARIK:['BCA','BRI','MANDIRI','BNI','BSI'], SETORAN:['BCA','BRI','BOS']};
-function setJ(j){jenis=j; ['PENJUALAN','NONBARANG','TARIK','SETORAN'].forEach(k=>{document.getElementById('b-'+k).className=k==j?'bg-black text-white p-3 rounded-xl':'bg-gray-100 p-3 rounded-xl'}); let list=brands[j]; document.getElementById('brandBox').innerHTML=list.map(b=>`<button onclick="pilihB('${b}')" id="bb-${b}" class="bg-white border p-2 rounded-lg">${b}</button>`).join(''); pilihB(list[0]);}
-function pilihB(b){brand=b; document.querySelectorAll('#brandBox button').forEach(e=>e.className='bg-white border p-2 rounded-lg'); document.getElementById('bb-'+b).className='bg-black text-white p-2 rounded-lg';}
-function saveKas(){let k={kes:parseInt(kKes.value)||0,bca:parseInt(kBCA.value)||0,bri:parseInt(kBRI.value)||0,mandiri:parseInt(kMandiri.value)||0,dana:parseInt(kDANA.value)||0,ovo:parseInt(kOVO.value)||0,gopay:parseInt(kGOPAY.value)||0,spay:parseInt(kSPAY.value)||0}; localStorage.setItem('kas',JSON.stringify(k)); load(); alert('Kas disimpan');}
-async function simpan(){let ket=document.getElementById('ket').value; let mod=parseInt(document.getElementById('mod').value)||0; let unt=parseInt(document.getElementById('unt').value)||0; if(!ket) return alert('isi ket'); await sb.from('transaksi').insert([{jenis:jenis.toLowerCase(), nama_barang:`${brand} ${ket}`, modal:mod, jual:mod+unt, untung:unt, jumlah:1}]); ket=''; mod=''; unt=''; document.getElementById('ket').value=''; document.getElementById('mod').value=''; document.getElementById('unt').value=''; load();}
-async function load(){let {data}=await sb.from('transaksi').select('*').order('id',{ascending:false}).limit(200); let penj=0,non=0,tM=0,tP=0,setor=0; let hP='',hN='',hT='',hS=''; (data||[]).forEach(t=>{if(t.jenis=='penjualan'){penj+=t.jual; hP+=`<div class="flex justify-between border-b py-1"><span>${t.nama_barang}</span><span>Rp ${t.jual}</span></div>`} else if(t.jenis=='nonbarang'){non+=t.jual; hN+=`<div class="flex justify-between border-b py-1"><span>${t.nama_barang}</span><span>Rp ${t.jual}</span></div>`} else if(t.jenis=='tarik'){tM+=t.modal; tP+=t.untung; hT+=`<div class="flex justify-between border-b py-1"><span>${t.nama_barang}</span><span>-Rp ${t.modal} +${t.untung}</span></div>`} else if(t.jenis=='setoran'){setor+=t.jual; hS+=`<div class="flex justify-between border-b py-1"><span>${t.nama_barang}</span><span>Rp ${t.jual}</span></div>`}}); vPenj.innerText=penj.toLocaleString('id-ID'); vNon.innerText=non.toLocaleString('id-ID'); vTarikM.innerText=tM.toLocaleString('id-ID'); vTarikP.innerText=tP.toLocaleString('id-ID'); vSetor.innerText=setor.toLocaleString('id-ID'); cPenj.innerHTML=hP||'Kosong'; cNon.innerHTML=hN||'Kosong'; cTarik.innerHTML=hT||'Kosong'; cSetor.innerHTML=hS||'Kosong'; let kas=JSON.parse(localStorage.getItem('kas')||'{"kes":0,"bca":0,"bri":0,"mandiri":0,"dana":0,"ovo":0,"gopay":0,"spay":0}'); let stanby=Object.values(kas).reduce((a,b)=>a+b,0); vStanby.innerText=stanby.toLocaleString('id-ID'); cStanby.innerHTML=Object.entries(kas).map(([k,v])=>v>0?`<div class="flex justify-between border-b py-1"><span>${k.toUpperCase()}</span><span>Rp ${v.toLocaleString('id-ID')}</span></div>`:'').join('')||'Isi di atas'; kKes.value=kas.kes||''; kBCA.value=kas.bca||''; kBRI.value=kas.bri||''; kMandiri.value=kas.mandiri||''; kDANA.value=kas.dana||''; kOVO.value=kas.ovo||''; kGOPAY.value=kas.gopay||''; kSPAY.value=kas.spay||''; totalTr.innerText=(data||[]).length; totalUang.innerText='Rp. '+(stanby+penj+non+tP-setor).toLocaleString('id-ID');}
-let d=new Date().toISOString().slice(0,10); tgl.innerText='TRANSAKSI TGL '+d; setJ('PENJUALAN'); load();
+let brands={PENJUALAN:['AXIS','XL','TSEL','ISAT','TRI','SF','BY.U','VOUCHER','CASE','TG'], NONBARANG:['PULSA','TOKEN','DANA','OVO','GOPAY','TRANSFER'], TARIK:['BCA','BRI','MANDIRI','BNI','BSI','BANK LAIN']};
+let data=JSON.parse(localStorage.getItem('rrq_pro_data')||'[]');
+let kas=JSON.parse(localStorage.getItem('rrq_pro_kas')||'{}');
+let setorVal=parseInt(localStorage.getItem('rrq_pro_setor')||0);
+function setJ(j){jenis=j; ['PENJUALAN','NONBARANG','TARIK'].forEach(k=>{let e=document.getElementById('b-'+k); e.className=k==j?'bg-black text-white p-3 rounded-xl text-[10px] font-bold':'bg-gray-100 p-3 rounded-xl text-[10px] font-bold'}); document.getElementById('brandBox').innerHTML=brands[j].map(b=>`<button onclick="setB('${b}')" id="bb-${b}" class="bg-white border p-2 rounded-lg text-[10px] font-bold">${b}</button>`).join(''); setB(brands[j][0]);}
+function setB(b){brand=b; document.querySelectorAll('#brandBox button').forEach(e=>e.className='bg-white border p-2 rounded-lg text-[10px] font-bold'); let el=document.getElementById('bb-'+b); if(el) el.className='bg-black text-white p-2 rounded-lg text-[10px] font-bold';}
+function add(){let k=document.getElementById('ket').value; let m=parseInt(document.getElementById('modal').value)||0; let jl=parseInt(document.getElementById('jual').value)||0; if(!k) return alert('Isi keterangan dulu Tyo'); data.push({jenis,brand,nama:`${brand} ${k}`, modal:m, jual:jl, untung:jl-m}); localStorage.setItem('rrq_pro_data',JSON.stringify(data)); document.getElementById('ket').value=''; document.getElementById('modal').value=''; document.getElementById('jual').value=''; hitung();}
+function hitung(){kas={kes:parseInt(s_kes.value)||0,bca:parseInt(s_bca.value)||0,bri:parseInt(s_bri.value)||0,mandiri:parseInt(s_mandiri.value)||0,bni:parseInt(s_bni.value)||0,bsi:parseInt(s_bsi.value)||0,dana:parseInt(s_dana.value)||0,ovo:parseInt(s_ovo.value)||0,gopay:parseInt(s_gopay.value)||0,spay:parseInt(s_spay.value)||0,link:parseInt(s_link.value)||0,app:parseInt(s_app.value)||0}; setorVal=parseInt(s_setor.value)||0; localStorage.setItem('rrq_pro_kas',JSON.stringify(kas)); localStorage.setItem('rrq_pro_setor',setorVal);
+let penj=0,non=0,tM=0,tP=0,unt=0; let hP='',hN='',hT=''; data.forEach((t,i)=>{let u=t.jual-t.modal; unt+=u; if(t.jenis=='PENJUALAN'){penj+=t.jual; hP+=`<div class="flex justify-between py-1 border-b"><span>${t.nama} (Modal ${t.modal} Jual ${t.jual} Untung ${u})</span><span><button onclick="hapus(${i})" class="text-red-500 font-bold">X</button></span></div>`} else if(t.jenis=='NONBARANG'){non+=t.jual; hN+=`<div class="flex justify-between py-1 border-b"><span>${t.nama} Untung ${u}</span><span><button onclick="hapus(${i})" class="text-red-500">X</button></span></div>`} else if(t.jenis=='TARIK'){tM+=t.modal; tP+=t.jual; hT+=`<div class="flex justify-between py-1 border-b"><span>${t.nama} Keluar ${t.modal} Admin ${t.jual}</span><span><button onclick="hapus(${i})" class="text-red-500">X</button></span></div>`}});
+let stanby=Object.values(kas).reduce((a,b)=>a+b,0);
+document.getElementById('totalStanby').innerText='Rp '+stanby.toLocaleString('id-ID');
+document.getElementById('vPenj').innerText='Rp '+penj.toLocaleString('id-ID'); document.getElementById('vNon').innerText='Rp '+non.toLocaleString('id-ID'); document.getElementById('vTarikM').innerText='Rp '+tM.toLocaleString('id-ID'); document.getElementById('vTarikP').innerText='Rp '+tP.toLocaleString('id-ID'); document.getElementById('vStanby').innerText='Rp '+stanby.toLocaleString('id-ID'); document.getElementById('vSetor').innerText='Rp '+setorVal.toLocaleString('id-ID');
+document.getElementById('cPenj').innerHTML=hP; document.getElementById('cNon').innerHTML=hN; document.getElementById('cTarik').innerHTML=hT; document.getElementById('cStanby').innerHTML=Object.entries(kas).filter(([k,v])=>v>0).map(([k,v])=>`<div>${k.toUpperCase()}: Rp ${v.toLocaleString('id-ID')}</div>`).join('');
+let total=stanby+penj+non+tP-tM-setorVal; document.getElementById('totalUang').innerText='Rp '+total.toLocaleString('id-ID'); document.getElementById('totalTr').innerText=data.length; document.getElementById('totalUnt').innerText='Untung Hari Ini: Rp '+unt.toLocaleString('id-ID');}
+function hapus(i){data.splice(i,1); localStorage.setItem('rrq_pro_data',JSON.stringify(data)); hitung();}
+function loadKas(){s_kes.value=kas.kes||''; s_bca.value=kas.bca||''; s_bri.value=kas.bri||''; s_mandiri.value=kas.mandiri||''; s_bni.value=kas.bni||''; s_bsi.value=kas.bsi||''; s_dana.value=kas.dana||''; s_ovo.value=kas.ovo||''; s_gopay.value=kas.gopay||''; s_spay.value=kas.spay||''; s_link.value=kas.link||''; s_app.value=kas.app||''; s_setor.value=setorVal||'';}
+let d=new Date().toISOString().slice(0,10); document.getElementById('tgl').innerText=d; setJ('PENJUALAN'); loadKas(); hitung();
 </script>
 </body></html>
