@@ -1,0 +1,13 @@
+<!DOCTYPE html><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<h2>Test Supabase RRQ</h2><button onclick="tes()">TES KONEKSI</button><pre id="out"></pre>
+<script>
+const URL="GANTI_URL";
+const KEY="GANTI_KEY";
+const supa = supabase.createClient(URL, KEY);
+async function tes(){
+  out.innerText="Menghubungkan...";
+  let {data,error}=await supa.from('stok').select('*');
+  if(error) out.innerText="ERROR: "+JSON.stringify(error);
+  else out.innerText="SUKSES ONLINE! Data: "+JSON.stringify(data);
+}
+</script>
